@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}{{ category.name }}{% endblock %}
+{% block content %}
+<h2>{{ category.name }}</h2>
+<div class="category-grid">
+  {% for l in lessons %}
+    <a class="category-card" href="{% url 'lesson_detail' l.slug %}">
+      <h3>{{ l.title }}</h3>
+      <p class="muted">{{ l.summary|default:"Sin resumen" }}</p>
+    </a>
+  {% empty %}
+    <p class="muted">No hay lecciones en esta categoría.</p>
+  {% endfor %}
+</div>
+
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Listado{% endblock %}
+{% block content %}
+  <h2>Modelos disponibles</h2>
+  <ul>
+    {% for a in assets %}
+      <li><a href="{% url 'asset_viewer' a.pk %}">{{ a.title }}</a></li>
+    {% empty %}
+      <li>Sin modelos todavía.</li>
+    {% endfor %}
+  </ul>
+{% endblock %}

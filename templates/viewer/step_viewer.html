@@ -1,0 +1,215 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}{{ step.lesson.title }} · Paso {{ step.order }}{% endblock %}
+
+{% block head %}
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+<style>
+  .viewer-wrap{
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: #ffffff;
+    border-radius: 12px;
+    border: 1px solid #ddd;
+    overflow: hidden;
+  }
+  #scene{ position:absolute; inset:0; width:100%; height:100%; display:block; }
+  .overlay{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:#fff; background:rgba(0,0,0,.25); font:14px system-ui; }
+  .viewer-toolbar{ display:flex; gap:10px; margin-top:10px; flex-wrap:wrap; }
+  .pdf-viewer iframe{ border-radius:8px; }
+  .step-nav{
+    margin-top: 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .nav-btn{
+    padding: 8px 14px;
+    background: var(--brand);
+    color: #9514c0;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background .2s;
+  }
+  .nav-btn:hover{ background: color-mix(in srgb, var(--brand), #000 20%); }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="breadcrumb">
+  <a href="{% url 'home' %}">Inicio</a> ·
+  <a href="{% url 'lesson_detail' step.lesson.slug %}">{{ step.lesson.title }}</a> ·
+  <span>Paso {{ step.order }}</span>
+</div>
+
+<div class="page">
+  <!-- Sidebar pasos -->
+  <aside class="sidebar">
+    <div class="card pad">
+      <h3>{{ step.lesson.title }}</h3>
+      <p class="muted">{{ step.lesson.summary }}</p>
+      <hr class="sep">
+      <ol class="step-list">
+        {% for s in steps %}
+          <li class="{% if s.pk == step.pk %}active{% endif %}">
+            <a href="{% url 'step_viewer' s.pk %}">{{ s.order }}. {{ s.title }}</a>
+          </li>
+        {% endfor %}
+      </ol>
+      <hr class="sep">
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        {% if prev_step %}<a class="btn" href="{% url 'step_viewer' prev_step.pk %}">← Anterior</a>{% endif %}
+        {% if next_step %}<a class="btn" href="{% url 'step_viewer' next_step.pk %}">Siguiente →</a>{% endif %}
+      </div>
+    </div>
+  </aside>
+
+  <!-- Principal -->
+  <section>
+    <h1>{{ step.order }}. {{ step.title }}</h1>
+    <p class="muted">{{ step.description }}</p>
+
+    {% if step.asset and step.asset.file %}
+      {% with step.asset.file.url|lower as f %}
+        {% if f|slice:"-4:" == ".pdf" %}
+          <!-- Visor PDF -->
+          <div class="pdf-viewer card pad" style="margin:12px 0">
+            <iframe src="{{ step.asset.file.url }}" width="100%" height="600px" style="border:none;"></iframe>
+            <a class="btn" href="{{ step.asset.file.url }}" target="_blank" style="margin-top:8px;display:inline-block">
+              📥 Descargar PDF
+            </a>
+          </div>
+        {% else %}
+          <!-- Visor 3D -->
+          <div id="viewerWrap" class="viewer-wrap" data-url="{{ step.asset.file.url|escapejs }}">
+            <canvas id="scene"></canvas>
+            <div id="overlay" class="overlay">Cargando modelo…</div>
+          </div>
+
+          <div class="viewer-toolbar">
+            <button id="reset" class="btn">Reset vista</button>
+            <button id="wire" class="btn">Wireframe ON/OFF</button>
+          </div>
+        {% endif %}
+      {% endwith %}
+    {% else %}
+      <p class="muted">Este paso no tiene recursos asociados.</p>
+    {% endif %}
+
+    <!-- Navegación entre pasos -->
+    <div class="step-nav">
+      {% if prev_step %}<a class="nav-btn" href="{% url 'step_viewer' prev_step.pk %}">← Paso anterior</a>{% endif %}
+      {% if next_step %}<a class="nav-btn" href="{% url 'step_viewer' next_step.pk %}">Paso siguiente →</a>{% endif %}
+    </div>
+
+    <div class="card pad" style="margin-top:14px">
+  <strong class="hl">Objetivo del paso:</strong>
+  <p class="muted" style="margin:6px 0 0 0">
+    {{ step.description|default:"(Agrega aquí el objetivo en Admin)" }}
+  </p>
+</div>
+
+
+{# Cargar el script Three.js solo cuando NO es PDF #}
+{% if step.asset and step.asset.file %}
+  {% with step.asset.file.url|lower as f %}
+    {% if f|slice:"-4:" != ".pdf" %}
+      <script type="module">
+      import * as THREE from "three";
+      import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+      import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+
+      const wrap = document.getElementById("viewerWrap");
+      const canvas = document.getElementById("scene");
+      const overlay = document.getElementById("overlay");
+
+      const renderer = new THREE.WebGLRenderer({ canvas, antialias:true });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color("#FFFFFF");
+
+      const camera = new THREE.PerspectiveCamera(60, 1, 0.1, 1000);
+      const INITIAL_POS = new THREE.Vector3(2.5, 1.5, 3.5);
+      camera.position.copy(INITIAL_POS);
+
+      function resize(){
+        const w = wrap.clientWidth, h = wrap.clientHeight;
+        renderer.setSize(w, h, false);
+        camera.aspect = w / h;
+        camera.updateProjectionMatrix();
+      }
+      resize();
+      new ResizeObserver(resize).observe(wrap);
+
+      scene.add(new THREE.AmbientLight(0xffffff, 1.0));
+      const dir = new THREE.DirectionalLight(0xffffff, 1.0); dir.position.set(5,5,5); scene.add(dir);
+
+      const controls = new OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+
+      function frameObject(object){
+        const box = new THREE.Box3().setFromObject(object);
+        const sizeLen = box.getSize(new THREE.Vector3()).length();
+        const center = box.getCenter(new THREE.Vector3());
+        controls.target.copy(center); controls.update();
+        const dist = sizeLen * 1.2;
+        camera.position.copy(center).add(new THREE.Vector3(dist, dist, dist));
+        camera.near = Math.max(sizeLen / 100, 0.01);
+        camera.far  = Math.max(sizeLen * 100, 10);
+        camera.updateProjectionMatrix();
+      }
+
+      const url = wrap.dataset.url || null;
+      let root = null;
+
+      if (url){
+        const loader = new GLTFLoader();
+        loader.load(url, (gltf) => {
+          root = gltf.scene; scene.add(root);
+          frameObject(root);
+          overlay.remove();
+        }, (ev) => {
+          const pct = (ev.total ? (ev.loaded/ev.total)*100 : 0).toFixed(0);
+          overlay.textContent = `Cargando… ${pct}%`;
+        }, (err) => {
+          console.error("Error cargando GLB/GLTF:", err);
+          overlay.textContent = "Error al cargar el modelo.";
+        });
+      } else {
+        overlay.textContent = "Este paso no tiene modelo 3D.";
+      }
+
+      document.getElementById("reset").addEventListener("click", ()=>{
+        if (root) frameObject(root);
+        else { camera.position.copy(INITIAL_POS); controls.target.set(0,0,0); controls.update(); }
+      });
+      let wire=false;
+      document.getElementById("wire").addEventListener("click", ()=>{
+        wire=!wire; if(!root) return;
+        root.traverse(o=>{
+          if (o.isMesh){
+            const mats = Array.isArray(o.material) ? o.material : [o.material];
+            mats.forEach(m=>{ m.wireframe = wire; m.needsUpdate = true; });
+          }
+        });
+      });
+
+      function animate(){ requestAnimationFrame(animate); controls.update(); renderer.render(scene,camera); }
+      animate();
+
+      try{ localStorage.setItem(`lesson:{{ step.lesson.pk }}:step:{{ step.pk }}:done`,"1"); }catch{}
+      </script>
+    {% endif %}
+  {% endwith %}
+{% endif %}
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Inicio · FO·Learn{% endblock %}
+{% block content %}
+  <h1>Categorías</h1>
+
+  <div class="category-grid">
+    {% for c in categories %}
+      <a class="category-card" href="{% url 'category_detail' c.slug %}">
+        <h3>{{ c.name }}</h3>
+        <p class="muted">{{ c.description|default:"Sin descripción" }}</p>
+      </a>
+    {% empty %}
+      <p class="muted">No hay categorías todavía.</p>
+    {% endfor %}
+  </div>
+{% endblock %}

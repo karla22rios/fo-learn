@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}{{ lesson.title }} · FO·Learn{% endblock %}
+
+{% block content %}
+  <div class="breadcrumb">
+    <a href="{% url 'home' %}">Inicio</a> ·
+    <a href="{% url 'category_detail' lesson.category.slug %}">{{ lesson.category.name }}</a> ·
+    <span>{{ lesson.title }}</span>
+  </div>
+
+  <h1>{{ lesson.title }}</h1>
+  <p class="muted">{{ lesson.summary }}</p>
+
+  <div class="category-grid">
+    {% for s in steps %}
+      <a class="category-card" href="{% url 'step_viewer' s.pk %}">
+        <h3>Paso {{ s.order }}: {{ s.title }}</h3>
+        <p class="muted">{{ s.description|default:"Sin descripción" }}</p>
+      </a>
+    {% empty %}
+      <p class="muted">Aún no hay pasos en esta lección.</p>
+    {% endfor %}
+  </div>
+{% endblock %}

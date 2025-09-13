@@ -1,0 +1,37 @@
+{% load static %}
+
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>{% block title %}Visualizador 3D — Fibra Óptica{% endblock %}</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <!-- Fuente -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <!-- CSS del proyecto -->
+  <link rel="stylesheet" href="{% static 'css/site.css' %}">
+  {% block head %}{% endblock %}
+</head>
+<body>
+  <header class="app-header">
+    <nav class="nav">
+      <a href="{% url 'home' %}" class="brand">
+        <div class="logo"></div>
+        <span>FO·Learn</span>
+      </a>
+      <div class="nav-actions">
+  <a class="btn" href="{% url 'home' %}">Inicio</a>
+
+  <!--{% if user.is_authenticated and user.is_staff %}
+    <a class="btn primary" href="/admin/">Admin</a>
+ {% endif %}-->
+</div>
+
+    </nav>
+  </header>
+
+  <main class="container">
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

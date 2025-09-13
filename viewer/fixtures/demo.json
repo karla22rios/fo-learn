@@ -1,0 +1,7 @@
+[
+  {"model":"viewer.category","pk":1,"fields":{"name":"Fibra Óptica","slug":"fibra-optica"}},
+  {"model":"viewer.lesson","pk":1,"fields":{
+    "category":1,"title":"Cierre de Empalme FOSC 450",
+    "slug":"cierre-fosc-450","summary":"Procedimiento de cierre","order":1
+  }}
+]
