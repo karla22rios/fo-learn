@@ -1,14 +1,11 @@
 {% load static %}
-
 <!doctype html>
 <html lang="es">
 <head>
   <meta charset="utf-8">
-  <title>{% block title %}Visualizador 3D — Fibra Óptica{% endblock %}</title>
+  <title>{% block title %}FO·Learn{% endblock %}</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <!-- Fuente -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <!-- CSS del proyecto -->
   <link rel="stylesheet" href="{% static 'css/site.css' %}">
   {% block head %}{% endblock %}
 </head>
@@ -19,14 +16,11 @@
         <div class="logo"></div>
         <span>FO·Learn</span>
       </a>
+
       <div class="nav-actions">
-  <a class="btn" href="{% url 'home' %}">Inicio</a>
-
-  <!--{% if user.is_authenticated and user.is_staff %}
-    <a class="btn primary" href="/admin/">Admin</a>
- {% endif %}-->
-</div>
-
+        <a href="{% url 'home' %}" class="btn-home">🏠 Inicio</a>
+        <button class="btn-back" onclick="window.history.back()">← Atrás</button>
+      </div>
     </nav>
   </header>
 
@@ -35,3 +29,4 @@
   </main>
 </body>
 </html>
+

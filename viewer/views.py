@@ -16,13 +16,13 @@ def lesson_detail(request, slug):
     return render(request, "viewer/lesson_detail.html", {"lesson": lesson, "steps": steps})
 
 def step_viewer(request, pk):
-    step = get_object_or_404(Step.objects.select_related("asset","lesson","lesson__category"), pk=pk)
-    # lista completa para la sidebar
-    steps = step.lesson.steps.select_related("asset").all()
-    # prev/next
-    prev_step = Step.objects.filter(lesson=step.lesson, order__lt=step.order).order_by("-order").first()
-    next_step = Step.objects.filter(lesson=step.lesson, order__gt=step.order).order_by("order").first()
+    step = get_object_or_404(Step, pk=pk)
+    steps = Step.objects.filter(lesson=step.lesson).order_by("order")
+    idx = list(steps).index(step)
+    prev_step = steps[idx-1] if idx > 0 else None
+    next_step = steps[idx+1] if idx < len(steps)-1 else None
     return render(request, "viewer/step_viewer.html", {
-        "step": step, "steps": steps, "prev_step": prev_step, "next_step": next_step
+        "step": step, "steps": steps,
+        "prev_step": prev_step, "next_step": next_step
     })
 

@@ -34,13 +34,23 @@ class AssetFile(models.Model):
     def __str__(self):
         return self.title
 
+
 class Step(models.Model):
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, related_name="steps")
     title = models.CharField(max_length=160)
-    description = models.TextField(blank=True, null=True)
+    description = models.TextField(blank=True, default="")
     order = models.PositiveIntegerField(default=1)
     asset = models.ForeignKey(Asset3D, on_delete=models.SET_NULL, null=True, blank=True,
                               help_text="Modelo 3D asociado a este paso")
+    audio = models.FileField(
+        upload_to="audio/steps/",
+        blank=True, null=True,
+        help_text="Sube un MP3 (ideal) u OGG con la narración de este paso."
+    )
+    tts_text = models.TextField(
+        blank=True,
+        help_text="(Opcional) Texto para TTS si no subes audio."
+    )
 
     class Meta:
         ordering = ["order", "id"]

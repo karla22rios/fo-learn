@@ -8,11 +8,9 @@ SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "dev-not-safe")
 
 # Para desarrollo usa True; en prod cámbialo a False
 DEBUG = True
-
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
-    "whitenoise.runserver_nostatic",   
     "django.contrib.staticfiles",        
     "django.contrib.admin",
     "django.contrib.auth",
@@ -25,7 +23,6 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",  # justo después de SecurityMiddleware
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -55,8 +52,7 @@ WSGI_APPLICATION = "PT2.wsgi.application"
 
 # Archivos estáticos y media
 STATIC_URL = "/static/"
-STATIC_ROOT = BASE_DIR / "staticfiles"  # para collectstatic en produccion
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+STATICFILES_DIRS = [BASE_DIR / "static"] 
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
@@ -65,7 +61,7 @@ MEDIA_ROOT = BASE_DIR / "media"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": MEDIA_ROOT / "db.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
     }
 }
 

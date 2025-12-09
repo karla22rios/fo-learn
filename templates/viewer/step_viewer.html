@@ -5,211 +5,364 @@
 {% block head %}
 <script type="importmap">
 {
-  "imports": {
-    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
-    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
-  }
+"imports": {
+"three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+"three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+}
+
 }
 </script>
+
 <style>
-  .viewer-wrap{
-    position: relative;
-    width: 100%;
-    aspect-ratio: 16 / 9;
-    background: #ffffff;
-    border-radius: 12px;
-    border: 1px solid #ddd;
-    overflow: hidden;
+/* === Cuadro principal donde se muestra el modelo 3D o PDF === */
+.step-viewer-page .viewer-wrap{
+  position: relative;             /* Permite posicionar la barra de herramientas dentro */
+  width: 100%;                    /* Ocupa todo el ancho del contenedor */
+  max-width: 100%;                /* Evita que se desborde */
+  aspect-ratio: 16 / 9;           /* Mantiene proporción tipo pantalla (16:9) */
+  background: #ffffffff;          /* Fondo blanco */
+  border-radius: 12px;            /* Bordes redondeados */
+  box-shadow: 0 8px 16px rgba(0,0,0,0.08);  /* Sombra suave */
+  overflow: hidden;               /* Oculta contenido que sobresalga */
+}
+
+/* === Barra de botones ("Wireframe" y "Reset vista") que aparece encima del visor === */
+.step-viewer-page .viewer-toolbar{
+  position:absolute;              /* Se coloca dentro del cuadro 3D */
+  inset:10px auto auto 10px;      /* Se ubica en la esquina superior izquierda */
+  z-index:2;                      /* Para que quede por encima del canvas */
+  display:flex; gap:8px; flex-wrap:wrap;  /* Distribuye los botones con espacio */
+  background: rgba(240, 166, 239, 0);     /* Color de fondo semitransparente */
+  backdrop-filter: rgba(119, 11, 118, 1);     /* Desenfoque */
+  padding:6px 8px;                /* Espaciado interno */
+  border-radius:10px;             /* Bordes redondeados */
+  border:1px solid rgba(0,0,0,0.06); /* Línea muy tenue alrededor */
+}
+
+/* === Botones generales (Wireframe, Reset, Siguiente, etc.) === */
+.step-viewer-page .btn, .step-viewer-page .nav-btn{
+  display:inline-flex; align-items:center; gap:6px;  /* Alinea icono/texto centrado */
+  cursor:pointer;                   /* Muestra la manita al pasar */
+  padding:8px 12px;                 /* Tamaño interno del botón */
+  border-radius:10px;               /* Bordes redondeados */
+  border:1px solid #9657d0;       /* Borde blanco*/
+  background: #9657d0;                  /* Fondo de botón */
+  box-shadow: 0 1px 1px rgba(65, 21, 80, 0.78); /* Sombra mínima */
+  text-decoration:none;             /* Quita subrayado a los links */
+  color: #ffffffff;                    /* Texto  */
+  font-weight:600; font-size:15px;  /* Letra seminegrita y legible */
+}
+
+/* === Efecto hover al pasar el cursor por los botones === */
+.step-viewer-page .btn:hover, .step-viewer-page .nav-btn:hover{
+  background: #681db4ff;               /* Ligero cambio de fondo */
+}
+
+/* === Texto de descripción u otras zonas grises === */
+.step-viewer-page .muted{
+  color: #000000ff;                    /* Gris oscuro (puedes aclarar si quieres) */
+  font-size: 15px;
+}
+
+/* === Líneas separadoras finas === */
+.step-viewer-page .sep{
+  border:none;
+  border-top:1px solid #0c0d0dff;   /* Línea superior negra tenue */
+  margin:10px 0;                    /* Espacio arriba y abajo */
+}
+
+/* === Tarjetas que envuelven secciones (audio, descripción, etc.) === */
+.step-viewer-page .card{
+  background: #c8aef8ff;                  /* Fondo */
+  border:1px solid #c475cdff;       /* Borde color lila */
+  border-radius:12px;               /* Bordes redondeados */
+  box-shadow:0 1px 2px rgba(0, 0, 0, 0.79); /* Sombra */
+}
+
+/* === Padding general reutilizable === */
+.step-viewer-page .pad{
+  padding:12px;
+}
+
+/* === Diseño de dos columnas: menú lateral y contenido principal === */
+.step-viewer-page .page{
+  display:grid;
+  grid-template-columns: 300px 1fr; /* Columna izquierda fija de 300px */
+  gap:16px;                         /* Espacio entre columnas */
+}
+
+/* === Menú lateral que muestra los pasos === */
+.step-viewer-page .sidebar{
+  position:sticky; top:16px;        /* Se queda “pegado” al hacer scroll */
+  height:max-content;               /* Se ajusta al contenido */
+}
+
+/* === Lista de pasos (1, 2, 3...) === */
+.step-viewer-page .step-list{
+  list-style:none;                  /* Quita viñetas */
+  padding:0; margin:0;
+  display:flex; flex-direction:column; gap:6px;
+  
+}
+
+/* === Enlaces dentro de la lista de pasos === */
+.step-viewer-page .step-list li a{
+  text-decoration:none; color: #000000ff;
+}
+
+/* === Paso activo (resaltado) === */
+.step-viewer-page .step-list li.active a{
+  text-decoration:none; color: #ffffffff;
+  font-weight:700;                  /* Resalta el texto */
+}
+
+/* === Navegación inferior (Anterior / Siguiente) === */
+.step-viewer-page .step-nav{
+  display:flex; justify-content:space-between;
+  align-items:center; margin:14px 0;
+}
+
+/* === Color principal de títulos, etiquetas o acentos === */
+.step-viewer-page .hl{
+  color: #5a0269ff;                    /* Morado principal */
+}
+
+/* === Ajuste para pantallas pequeñas: cambia a una sola columna === */
+@media (max-width: 1100px){
+  .step-viewer-page .page{
+    grid-template-columns: 1fr;
   }
-  #scene{ position:absolute; inset:0; width:100%; height:100%; display:block; }
-  .overlay{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:#fff; background:rgba(0,0,0,.25); font:14px system-ui; }
-  .viewer-toolbar{ display:flex; gap:10px; margin-top:10px; flex-wrap:wrap; }
-  .pdf-viewer iframe{ border-radius:8px; }
-  .step-nav{
-    margin-top: 18px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  .step-viewer-page .sidebar{
+    position:static;               
   }
-  .nav-btn{
-    padding: 8px 14px;
-    background: var(--brand);
-    color: #9514c0;
-    border-radius: 6px;
-    text-decoration: none;
-    font-weight: 500;
-    transition: background .2s;
-  }
-  .nav-btn:hover{ background: color-mix(in srgb, var(--brand), #000 20%); }
+}
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="breadcrumb">
-  <a href="{% url 'home' %}">Inicio</a> ·
-  <a href="{% url 'lesson_detail' step.lesson.slug %}">{{ step.lesson.title }}</a> ·
-  <span>Paso {{ step.order }}</span>
-</div>
-
-<div class="page">
-  <!-- Sidebar pasos -->
-  <aside class="sidebar">
-    <div class="card pad">
-      <h3>{{ step.lesson.title }}</h3>
-      <p class="muted">{{ step.lesson.summary }}</p>
-      <hr class="sep">
-      <ol class="step-list">
-        {% for s in steps %}
-          <li class="{% if s.pk == step.pk %}active{% endif %}">
-            <a href="{% url 'step_viewer' s.pk %}">{{ s.order }}. {{ s.title }}</a>
-          </li>
-        {% endfor %}
-      </ol>
-      <hr class="sep">
-      <div style="display:flex;gap:8px;flex-wrap:wrap">
-        {% if prev_step %}<a class="btn" href="{% url 'step_viewer' prev_step.pk %}">← Anterior</a>{% endif %}
-        {% if next_step %}<a class="btn" href="{% url 'step_viewer' next_step.pk %}">Siguiente →</a>{% endif %}
+<div class="step-viewer-page">
+  <div class="page">
+    <aside class="sidebar">
+      <div class="card pad">
+        <h3>{{ step.lesson.title }}</h3>
+        <p class="muted">{{ step.lesson.summary }}</p>
+        <hr class="sep">
+        <ol class="step-list">
+          {% for s in steps %}
+            <li class="{% if s.pk == step.pk %}active{% endif %}"><a href="{% url 'step_viewer' s.pk %}">{{ s.order }}. {{ s.title }}</a></li>
+          {% endfor %}
+        </ol>
+        <hr class="sep">
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          {% if prev_step %}<a class="btn" href="{% url 'step_viewer' prev_step.pk %}">← Anterior</a>{% endif %}
+          {% if next_step %}<a class="btn" href="{% url 'step_viewer' next_step.pk %}">Siguiente →</a>{% endif %}
+        </div>
       </div>
-    </div>
-  </aside>
+    </aside>
 
-  <!-- Principal -->
-  <section>
-    <h1>{{ step.order }}. {{ step.title }}</h1>
-    <p class="muted">{{ step.description }}</p>
+    <section>
+      <h1>{{ step.order }}. {{ step.title }}</h1>
+      {% if step.asset and step.asset.file %}
+        {% with step.asset.file.url|lower as f %}
+          {% if f|slice:"-4:" == ".pdf" %}
+            <div class="viewer-wrap" id="viewerWrap">
+              <iframe src="{{ step.asset.file.url }}#view=FitH" title="Visor PDF" style="width:100%;height:100%;border:0"></iframe>
+            </div>
+          {% else %}
+            <div class="viewer-wrap" id="viewerWrap">
+              <div class="viewer-toolbar">
+                <button class="btn" id="btnWire">Wireframe ON / OFF</button>
+                <button class="btn" id="btnReset">Reset vista</button>
+              </div>
+              <canvas id="scene" style="display:block;width:100%;height:100%"></canvas>
+            </div>
+          {% endif %}
+        {% endwith %}
+      {% else %}
+        <p class="muted">Este paso no tiene recursos asociados.</p>
+      {% endif %}
 
-    {% if step.asset and step.asset.file %}
-      {% with step.asset.file.url|lower as f %}
-        {% if f|slice:"-4:" == ".pdf" %}
-          <!-- Visor PDF -->
-          <div class="pdf-viewer card pad" style="margin:12px 0">
-            <iframe src="{{ step.asset.file.url }}" width="100%" height="600px" style="border:none;"></iframe>
-            <a class="btn" href="{{ step.asset.file.url }}" target="_blank" style="margin-top:8px;display:inline-block">
-              📥 Descargar PDF
-            </a>
-          </div>
-        {% else %}
-          <!-- Visor 3D -->
-          <div id="viewerWrap" class="viewer-wrap" data-url="{{ step.asset.file.url|escapejs }}">
-            <canvas id="scene"></canvas>
-            <div id="overlay" class="overlay">Cargando modelo…</div>
-          </div>
+      <div class="card pad" style="margin-top:12px">
+        <strong class="hl">Narración del paso</strong>
+        <p class="muted" style="margin:6px 0 10px 0">Escucha la explicación de este paso. Puedes activar el “Auto-play” para que inicie al abrir cada paso.</p>
+        <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap">
+          <audio id="narration" controls preload="metadata" style="flex:1 1 320px; width:100%">
+              {% if step.audio %}
+                <source src="{{ step.audio.url }}" type="audio/mpeg">
+                <source src="{{ step.audio.url }}" type="audio/mp4">
+              {% endif %}
+              Tu navegador no soporta el elemento de audio.
+            </audio>
 
-          <div class="viewer-toolbar">
-            <button id="reset" class="btn">Reset vista</button>
-            <button id="wire" class="btn">Wireframe ON/OFF</button>
-          </div>
+          <label style="display:flex; align-items:center; gap:8px"><input id="autoplayToggle" type="checkbox">Auto-play</label>
+          <button class="btn" id="restartAudio" type="button">Reiniciar audio</button>
+          {% if not step.audio and step.tts_text %}
+            <button class="btn" id="ttsPlay" type="button">Reproducir TTS</button>
+            <button class="btn" id="ttsStop" type="button">Detener TTS</button>
+          {% endif %}
+        </div>
+        {% if not step.audio and step.tts_text %}
+          <p class="muted" style="margin-top:8px">(No hay archivo de audio subido para este paso. Usaremos síntesis de voz del navegador con el texto provisto.)</p>
         {% endif %}
-      {% endwith %}
-    {% else %}
-      <p class="muted">Este paso no tiene recursos asociados.</p>
-    {% endif %}
+      </div>
 
-    <!-- Navegación entre pasos -->
-    <div class="step-nav">
-      {% if prev_step %}<a class="nav-btn" href="{% url 'step_viewer' prev_step.pk %}">← Paso anterior</a>{% endif %}
-      {% if next_step %}<a class="nav-btn" href="{% url 'step_viewer' next_step.pk %}">Paso siguiente →</a>{% endif %}
-    </div>
+      <div class="step-nav">
+        {% if prev_step %}<a class="nav-btn" href="{% url 'step_viewer' prev_step.pk %}">← Paso anterior</a>{% endif %}
+        {% if next_step %}<a class="nav-btn" href="{% url 'step_viewer' next_step.pk %}">Paso siguiente →</a>{% endif %}
+      </div>
 
-    <div class="card pad" style="margin-top:14px">
-  <strong class="hl">Objetivo del paso:</strong>
-  <p class="muted" style="margin:6px 0 0 0">
-    {{ step.description|default:"(Agrega aquí el objetivo en Admin)" }}
-  </p>
-</div>
+      <div class="card pad" style="margin-top:14px">
+        <strong class="hl">Descripción:</strong>
+        <p class="muted" style="margin:6px 0 0 0; text-align:justify; white-space: pre-line;">{{ step.description|default:"(Agrega aquí el objetivo en Admin)" }}</p>
+      </div>
 
+      {% if step.asset and step.asset.file %}
+        {% with step.asset.file.url|lower as f %}
+          {% if f|slice:"-4:" != ".pdf" %}
+            <script type="module">
+            import * as THREE from "three";
+            import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+            import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 
-{# Cargar el script Three.js solo cuando NO es PDF #}
-{% if step.asset and step.asset.file %}
-  {% with step.asset.file.url|lower as f %}
-    {% if f|slice:"-4:" != ".pdf" %}
-      <script type="module">
-      import * as THREE from "three";
-      import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-      import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+            const wrap = document.getElementById("viewerWrap");
+            const canvas = document.getElementById("scene");
+            const renderer = new THREE.WebGLRenderer({ canvas, antialias:true });
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2)); // nitidez sin excederse
 
-      const wrap = document.getElementById("viewerWrap");
-      const canvas = document.getElementById("scene");
-      const overlay = document.getElementById("overlay");
+            const scene = new THREE.Scene();
+            scene.background = new THREE.Color(0xffffff); 
 
-      const renderer = new THREE.WebGLRenderer({ canvas, antialias:true });
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            const camera = new THREE.PerspectiveCamera(55, 16/9, 0.01, 1000);
+            camera.position.set(3, 2, 3);
 
-      const scene = new THREE.Scene();
-      scene.background = new THREE.Color("#FFFFFF");
+            const controls = new OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
 
-      const camera = new THREE.PerspectiveCamera(60, 1, 0.1, 1000);
-      const INITIAL_POS = new THREE.Vector3(2.5, 1.5, 3.5);
-      camera.position.copy(INITIAL_POS);
+            // Luces
+            const hemi = new THREE.HemisphereLight(0xffffff, 0x222222, 1.0); scene.add(hemi);
+            const dir  = new THREE.DirectionalLight(0xffffff, 1.0); dir.position.set(3,4,5); scene.add(dir);
 
-      function resize(){
-        const w = wrap.clientWidth, h = wrap.clientHeight;
-        renderer.setSize(w, h, false);
-        camera.aspect = w / h;
-        camera.updateProjectionMatrix();
-      }
-      resize();
-      new ResizeObserver(resize).observe(wrap);
+            // Encapsula el ajuste de tamaño del canvas
+            function fit() {
+              const rect = wrap.getBoundingClientRect();
+              const w = rect.width; const h = rect.height;
+              renderer.setSize(w, h, false);
+              camera.aspect = w / h;
+              camera.updateProjectionMatrix();
+            }
+            new ResizeObserver(fit).observe(wrap);
+            fit();
 
-      scene.add(new THREE.AmbientLight(0xffffff, 1.0));
-      const dir = new THREE.DirectionalLight(0xffffff, 1.0); dir.position.set(5,5,5); scene.add(dir);
+            // --- Función para encuadrar el objeto COMPLETO en cámara ---
+            function frameObject(object3D, camera, controls, padding = 1.2) {
+              const box = new THREE.Box3().setFromObject(object3D);
+              const sphere = box.getBoundingSphere(new THREE.Sphere());
+              const center = sphere.center.clone();
+              const radius = sphere.radius;
 
-      const controls = new OrbitControls(camera, renderer.domElement);
-      controls.enableDamping = true;
+              // Calcula la distancia necesaria en función del FOV vertical
+              const fov = (camera.fov * Math.PI) / 180;
+              const dist = (radius * padding) / Math.sin(fov / 2);
 
-      function frameObject(object){
-        const box = new THREE.Box3().setFromObject(object);
-        const sizeLen = box.getSize(new THREE.Vector3()).length();
-        const center = box.getCenter(new THREE.Vector3());
-        controls.target.copy(center); controls.update();
-        const dist = sizeLen * 1.2;
-        camera.position.copy(center).add(new THREE.Vector3(dist, dist, dist));
-        camera.near = Math.max(sizeLen / 100, 0.01);
-        camera.far  = Math.max(sizeLen * 100, 10);
-        camera.updateProjectionMatrix();
-      }
+              // Mantén la dirección actual de la cámara, pero colócala a la distancia adecuada
+              const dir = camera.position.clone().sub(controls.target).normalize();
+              camera.position.copy(center).add(dir.multiplyScalar(dist));
 
-      const url = wrap.dataset.url || null;
-      let root = null;
+              // Ajusta near/far para evitar clipping
+              camera.near = Math.max(dist - radius * 2, 0.01);
+              camera.far  = dist + radius * 2;
+              camera.updateProjectionMatrix();
 
-      if (url){
-        const loader = new GLTFLoader();
-        loader.load(url, (gltf) => {
-          root = gltf.scene; scene.add(root);
-          frameObject(root);
-          overlay.remove();
-        }, (ev) => {
-          const pct = (ev.total ? (ev.loaded/ev.total)*100 : 0).toFixed(0);
-          overlay.textContent = `Cargando… ${pct}%`;
-        }, (err) => {
-          console.error("Error cargando GLB/GLTF:", err);
-          overlay.textContent = "Error al cargar el modelo.";
-        });
-      } else {
-        overlay.textContent = "Este paso no tiene modelo 3D.";
-      }
+              // Muy importante: el target debe ser el centro geométrico del modelo
+              controls.target.copy(center);
+              controls.update();
+            }
 
-      document.getElementById("reset").addEventListener("click", ()=>{
-        if (root) frameObject(root);
-        else { camera.position.copy(INITIAL_POS); controls.target.set(0,0,0); controls.update(); }
-      });
-      let wire=false;
-      document.getElementById("wire").addEventListener("click", ()=>{
-        wire=!wire; if(!root) return;
-        root.traverse(o=>{
-          if (o.isMesh){
-            const mats = Array.isArray(o.material) ? o.material : [o.material];
-            mats.forEach(m=>{ m.wireframe = wire; m.needsUpdate = true; });
-          }
-        });
-      });
+            // Carga del modelo y encuadre
+            const loader = new GLTFLoader();
+            let root = null;
+            let initialCam = null;
+            let initialTarget = null;
 
-      function animate(){ requestAnimationFrame(animate); controls.update(); renderer.render(scene,camera); }
-      animate();
+            loader.load("{{ step.asset.file.url }}", (gltf) => {
+              root = gltf.scene;
+              scene.add(root);
 
-      try{ localStorage.setItem(`lesson:{{ step.lesson.pk }}:step:{{ step.pk }}:done`,"1"); }catch{}
+              frameObject(root, camera, controls, 1.2);
+
+              initialCam = camera.position.clone();
+              initialTarget = controls.target.clone();
+            });
+
+            // Botones UI
+            document.getElementById("btnWire")?.addEventListener("click", () => {
+              if (!root) return;
+              root.traverse(o => { if (o.isMesh && o.material) o.material.wireframe = !o.material.wireframe; });
+            });
+
+            document.getElementById("btnReset")?.addEventListener("click", () => {
+              if (!initialCam || !initialTarget) return;
+              camera.position.copy(initialCam);
+              controls.target.copy(initialTarget);
+              controls.update();
+            });
+
+            // Render loop
+            function animate() {
+              requestAnimationFrame(animate);
+              controls.update();
+              renderer.render(scene, camera);
+            }
+            animate();
+
+            try { localStorage.setItem(`lesson:{{ step.lesson.pk }}:step:{{ step.pk }}:done`, "1"); } catch {}
+            </script>
+          {% endif %}
+        {% endwith %}
+      {% endif %}
+
+      <script>
+      (function(){
+        const audioEl = document.getElementById("narration");
+        const autoplayToggle = document.getElementById("autoplayToggle");
+        const restartBtn = document.getElementById("restartAudio");
+        const key = `lesson:{{ step.lesson.pk }}:step:{{ step.pk }}:autoplay`;
+        try { const saved = localStorage.getItem(key); if (saved !== null) autoplayToggle.checked = saved === "1"; } catch(e) {}
+        autoplayToggle?.addEventListener("change", ()=>{ try { localStorage.setItem(key, autoplayToggle.checked ? "1" : "0"); } catch(e){} });
+        async function attemptAutoplay(){ if (!audioEl) return; if (!autoplayToggle.checked) return; try { await audioEl.play(); } catch(e) { audioEl.muted = true; try { await audioEl.play(); } catch(_){} const unmute = () => { audioEl.muted = false; window.removeEventListener("click", unmute); }; window.addEventListener("click", unmute, { once: true }); } }
+        restartBtn?.addEventListener("click", ()=>{ if (!audioEl) return; audioEl.currentTime = 0; audioEl.play().catch(()=>{}); });
+        const progressKey = `audio:progress:lesson:{{ step.lesson.pk }}:step:{{ step.pk }}`;
+        if (audioEl) {
+          try {
+            const last = parseFloat(localStorage.getItem(progressKey));
+            if (!isNaN(last) && last > 0) {
+              const setTime = () => {
+                if (!isNaN(audioEl.duration) && last < audioEl.duration) audioEl.currentTime = last;
+                audioEl.removeEventListener("loadedmetadata", setTime);
+              };
+              if (isNaN(audioEl.duration) || !audioEl.duration) {
+                audioEl.addEventListener("loadedmetadata", setTime);
+              } else {
+                if (last < audioEl.duration) audioEl.currentTime = last;
+              }
+            }
+          } catch(e) {}
+          audioEl.addEventListener("timeupdate", ()=>{ try { localStorage.setItem(progressKey, String(audioEl.currentTime)); } catch(e){} });
+        }
+        {% if not step.audio and step.tts_text %}
+        let currentUtter = null;
+        const ttsPlayBtn = document.getElementById("ttsPlay");
+        const ttsStopBtn = document.getElementById("ttsStop");
+        function playTTS(){ if (!("speechSynthesis" in window)) { alert("Tu navegador no soporta síntesis de voz."); return; } window.speechSynthesis.cancel(); currentUtter = new SpeechSynthesisUtterance({{ step.tts_text|escapejs }}); currentUtter.rate = 1.0; currentUtter.pitch = 1.0; currentUtter.lang = "es-MX"; window.speechSynthesis.speak(currentUtter); }
+        function stopTTS(){ window.speechSynthesis.cancel(); currentUtter = null; }
+        ttsPlayBtn?.addEventListener("click", playTTS);
+        ttsStopBtn?.addEventListener("click", stopTTS);
+        {% endif %}
+        document.addEventListener("DOMContentLoaded", attemptAutoplay);
+        setTimeout(attemptAutoplay, 400);
+      })();
       </script>
-    {% endif %}
-  {% endwith %}
-{% endif %}
+    </section>
+  </div>
+</div>
 {% endblock %}
