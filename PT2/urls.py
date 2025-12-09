@@ -17,5 +17,5 @@ urlpatterns = [
     path("", include(router.urls)),
 ]
 
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# ❗ Importante: también en producción, no solo con DEBUG=True
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
