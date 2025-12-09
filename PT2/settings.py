@@ -7,8 +7,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "dev-not-safe")
 
 # Para desarrollo usa True; en prod cámbialo a False
-DEBUG = True
-ALLOWED_HOSTS = []
+DEBUG = os.getenv("DEBUG", "False") == "True"
+ALLOWED_HOSTS = [
+    "localhost",
+    "127.0.0.1",
+    ".onrender.com",
+]
 
 INSTALLED_APPS = [
     "django.contrib.staticfiles",        
@@ -29,6 +33,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
 ]
 
 ROOT_URLCONF = "PT2.urls"
@@ -54,8 +59,11 @@ WSGI_APPLICATION = "PT2.wsgi.application"
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [BASE_DIR / "static"] 
 
+
 MEDIA_URL = "/media/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
 MEDIA_ROOT = BASE_DIR / "media"
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # Base de datos (usa BASE_DIR, no MEDIA_ROOT)
 DATABASES = {
