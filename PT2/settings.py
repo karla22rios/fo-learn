@@ -7,8 +7,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "dev-not-safe")
 
 # Para desarrollo usa True; en prod cámbialo a False
-DEBUG = True
-ALLOWED_HOSTS = []
+DEBUG = os.getenv("DEBUG", "False") == "True"
+ALLOWED_HOSTS = [
+    "localhost",
+    "127.0.0.1",
+    ".onrender.com",
+]
 
 INSTALLED_APPS = [
     "django.contrib.staticfiles",        
@@ -54,7 +58,9 @@ WSGI_APPLICATION = "PT2.wsgi.application"
 # Archivos estáticos y media
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
-STATICFILES_DIRS = [BASE_DIR / "static"] 
+STATICFILES_DIRS = [BASE_DIR / "static"]
+
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
@@ -83,5 +89,3 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Permite iframes del mismo dominio
 X_FRAME_OPTIONS = "SAMEORIGIN"
-
-
