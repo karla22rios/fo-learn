@@ -117,13 +117,16 @@
 
       <!-- AUDIO -->
       <div class="card" style="margin-top:12px">
-        <strong>Narración del paso</strong>
+      <strong>Narración del paso</strong>
+
+      {% if step.audio_static_path %}
         <audio id="narration" controls style="width:100%">
-          {% if step.audio_static_path %}
-            <source src="{% static step.audio_static_path %}" type="audio/mpeg">
-          {% endif %}
+          <source src="{% static step.audio_static_path %}" type="audio/mpeg">
         </audio>
-      </div>
+      {% else %}
+        <p style="margin:8px 0 0">Aún no hay audio para este paso.</p>
+      {% endif %}
+    </div>
 
       <div class="card" style="margin-top:14px">
         <strong>Descripción</strong>
