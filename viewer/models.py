@@ -21,10 +21,20 @@ class Lesson(models.Model):
 class Asset3D(models.Model):
     title = models.CharField(max_length=120)
     description = models.TextField(blank=True)
-    file = models.FileField(upload_to="models/", help_text="Sube .glb o .gltf")
+
+    file = models.FileField(upload_to="models/", blank=True, null=True, help_text="(Opcional) Para local. En Render usa static_path.")
+
+    static_path = models.CharField(
+        max_length=255,
+        blank=True,
+        help_text='Ruta en static. Ej: viewer/models/cierre.glb'
+    )
+
     created_at = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self): return self.title
+    def __str__(self): 
+        return self.title
+
 
 class AssetFile(models.Model):
     title = models.CharField(max_length=200)
@@ -40,20 +50,32 @@ class Step(models.Model):
     title = models.CharField(max_length=160)
     description = models.TextField(blank=True, default="")
     order = models.PositiveIntegerField(default=1)
-    asset = models.ForeignKey(Asset3D, on_delete=models.SET_NULL, null=True, blank=True,
-                              help_text="Modelo 3D asociado a este paso")
+
+    asset = models.ForeignKey(
+        Asset3D, on_delete=models.SET_NULL, null=True, blank=True,
+        help_text="Modelo 3D asociado a este paso"
+    )
+
+    # (opcional) para local / migración
     audio = models.FileField(
         upload_to="audio/steps/",
         blank=True, null=True,
-        help_text="Sube un MP3 (ideal) u OGG con la narración de este paso."
+        help_text="(Opcional) Para local. En Render usa audio_static_path."
     )
-    tts_text = models.TextField(
+
+    # NUEVO: ruta dentro de static/, por ejemplo: "viewer/audio/paso1.mp3"
+    audio_static_path = models.CharField(
+        max_length=255,
         blank=True,
-        help_text="(Opcional) Texto para TTS si no subes audio."
+        help_text='Ruta en static. Ej: viewer/audio/paso1.mp3'
     )
+
+    tts_text = models.TextField(blank=True, help_text="(Opcional) Texto para TTS si no subes audio.")
 
     class Meta:
         ordering = ["order", "id"]
         unique_together = [("lesson", "order")]
 
-    def __str__(self): return f"{self.lesson.title} · {self.order}. {self.title}"
+    def __str__(self): 
+        return f"{self.lesson.title} · {self.order}. {self.title}"
+

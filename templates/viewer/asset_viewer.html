@@ -63,7 +63,7 @@
 
     // Cargar modelo GLTF/GLB desde MEDIA (ruta guardada en BD)
     const loader = new GLTFLoader();
-    const url = "{{ asset.file.url }}"; // ej: /media/models/tu_modelo.glb
+    const url = "{{ asset.file.url }}";
     loader.load(url, (gltf) => {
       const root = gltf.scene;
       scene.add(root);
