@@ -117,16 +117,16 @@
 
       <!-- AUDIO -->
       <div class="card" style="margin-top:12px">
-      <strong>Narración del paso</strong>
+        <strong>Narración del paso</strong>
 
-      {% if step.audio_static_path %}
-        <audio id="narration" controls style="width:100%">
-          <source src="{% static step.audio_static_path %}" type="audio/mpeg">
-        </audio>
-      {% else %}
-        <p style="margin:8px 0 0">Aún no hay audio para este paso.</p>
-      {% endif %}
-    </div>
+        {% if step.audio_static_path %}
+          <audio id="narration" controls style="width:100%">
+            <source src="{% static step.audio_static_path %}" type="audio/mpeg">
+          </audio>
+        {% else %}
+          <p style="margin:8px 0 0">Aún no hay audio para este paso.</p>
+        {% endif %}
+      </div>
 
       <div class="card" style="margin-top:14px">
         <strong>Descripción</strong>
@@ -136,7 +136,7 @@
       {% if step.asset and step.asset.static_path %}
         {% with step.asset.static_path|lower as f %}
           {% if f|slice:"-4:" != ".pdf" %}
-          <!-- THREE.JS -->
+          <!-- THREE.JS (con animación GLB automática si existe) -->
           <script type="module">
             import * as THREE from "three";
             import { OrbitControls } from "three/addons/controls/OrbitControls.js";
@@ -170,25 +170,46 @@
             new ResizeObserver(fit).observe(wrap); fit();
 
             const loader = new GLTFLoader();
+            const clock = new THREE.Clock();
+            let mixer = null;
+
             let root = null;
             let cam0 = null, tgt0 = null;
 
-            loader.load("{% static step.asset.static_path %}", (gltf)=>{
-              root = gltf.scene;
-              scene.add(root);
+            loader.load(
+              "{% static step.asset.static_path %}",
+              (gltf)=>{
+                root = gltf.scene;
+                scene.add(root);
 
-              const box = new THREE.Box3().setFromObject(root);
-              const s = box.getBoundingSphere(new THREE.Sphere());
-              controls.target.copy(s.center);
-              camera.position.copy(s.center).add(new THREE.Vector3(1,1,1).multiplyScalar(s.radius*2));
-              camera.near = 0.01;
-              camera.far = s.radius * 10;
-              camera.updateProjectionMatrix();
-              controls.update();
+                // encuadre automático
+                const box = new THREE.Box3().setFromObject(root);
+                const s = box.getBoundingSphere(new THREE.Sphere());
+                controls.target.copy(s.center);
+                camera.position.copy(s.center).add(
+                  new THREE.Vector3(1,1,1).multiplyScalar(s.radius*2)
+                );
+                camera.near = 0.01;
+                camera.far = s.radius * 10;
+                camera.updateProjectionMatrix();
+                controls.update();
 
-              cam0 = camera.position.clone();
-              tgt0 = controls.target.clone();
-            });
+                cam0 = camera.position.clone();
+                tgt0 = controls.target.clone();
+
+                // ✅ Animación GLB automática (si existe)
+                if (gltf.animations && gltf.animations.length) {
+                  mixer = new THREE.AnimationMixer(root);
+                  const action = mixer.clipAction(gltf.animations[0]);
+                  action.reset();
+                  action.play();
+                }
+              },
+              undefined,
+              (err)=>{
+                console.error("Error cargando GLB:", err);
+              }
+            );
 
             document.getElementById("btnWire").onclick = ()=>{
               if(!root) return;
@@ -196,6 +217,7 @@
                 if(o.isMesh && o.material) o.material.wireframe = !o.material.wireframe;
               });
             };
+
             document.getElementById("btnReset").onclick = ()=>{
               if(!cam0) return;
               camera.position.copy(cam0);
@@ -205,6 +227,10 @@
 
             function animate(){
               requestAnimationFrame(animate);
+
+              const dt = clock.getDelta();
+              if (mixer) mixer.update(dt);
+
               controls.update();
               renderer.render(scene, camera);
             }
@@ -218,3 +244,4 @@
   </div>
 </div>
 {% endblock %}
+
