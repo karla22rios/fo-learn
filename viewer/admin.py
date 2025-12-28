@@ -28,9 +28,22 @@ class StepAdmin(admin.ModelAdmin):
     list_display = ("lesson", "order", "title", "has_audio")
     list_filter = ("lesson",)
     search_fields = ("title", "description", "tts_text")
-    fields = ("lesson", "order", "title", "description", "asset", "audio", "tts_text")
+
+    fields = (
+        "lesson",
+        "order",
+        "title",
+        "description",
+        "asset",
+
+        # AUDIO
+        "audio_static_path",  # 👈 ESTE ES EL IMPORTANTE (Render)
+        "audio",              # opcional (local)
+        "tts_text",
+    )
 
     def has_audio(self, obj):
-        return bool(obj.audio)
+        return bool(obj.audio or obj.audio_static_path)
+
     has_audio.boolean = True
     has_audio.short_description = "Audio"

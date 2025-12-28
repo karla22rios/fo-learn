@@ -65,9 +65,9 @@ class Step(models.Model):
 
     # NUEVO: ruta dentro de static/, por ejemplo: "viewer/audio/paso1.mp3"
     audio_static_path = models.CharField(
-        max_length=255,
-        blank=True,
-        help_text='Ruta en static. Ej: viewer/audio/paso1.mp3'
+    max_length=255,
+    blank=True,
+    help_text="Ruta dentro de static/"
     )
 
     tts_text = models.TextField(blank=True, help_text="(Opcional) Texto para TTS si no subes audio.")
