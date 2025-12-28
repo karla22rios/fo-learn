@@ -1,4 +1,4 @@
-#!/Users/karlarios/PT2/.venv/bin/python3.13
+#!/Users/karlarios/Desktop/PT2/.venv/bin/python
 import sys
 from pip._internal.cli.main import main
 if __name__ == '__main__':

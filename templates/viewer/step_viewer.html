@@ -115,23 +115,64 @@
         <p>Este paso no tiene recursos asociados.</p>
       {% endif %}
 
-      <!-- AUDIO -->
+      <!-- AUDIO (con auto-play + reiniciar) -->
       <div class="card" style="margin-top:12px">
         <strong>Narración del paso</strong>
+        <p style="margin:6px 0 10px">
+          Escucha la explicación de este paso. Puedes activar el "Auto-play" para que inicie al abrir cada paso.
+        </p>
 
         {% if step.audio_static_path %}
-          <audio id="narration" controls style="width:100%">
-            <source src="{% static step.audio_static_path %}" type="audio/mpeg">
-          </audio>
+          <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+            <audio id="narration" controls style="flex:1;min-width:260px">
+              <source src="{% static step.audio_static_path %}" type="audio/mpeg">
+            </audio>
+
+            <label style="display:flex;align-items:center;gap:8px;user-select:none">
+              <input type="checkbox" id="autoplayToggle">
+              <span>Auto-play</span>
+            </label>
+
+            <button class="btn" type="button" id="btnRestartAudio">Reiniciar audio</button>
+          </div>
+
+          <script>
+            (function(){
+              const audio = document.getElementById("narration");
+              const toggle = document.getElementById("autoplayToggle");
+              const btn = document.getElementById("btnRestartAudio");
+
+              // Estado persistente
+              const KEY = "folearn_autoplay";
+              const saved = localStorage.getItem(KEY);
+              toggle.checked = saved === "1";
+
+              toggle.addEventListener("change", () => {
+                localStorage.setItem(KEY, toggle.checked ? "1" : "0");
+              });
+
+              btn.addEventListener("click", () => {
+                audio.currentTime = 0;
+                audio.play().catch(()=>{});
+              });
+
+              // Autoplay al cargar el paso (si está activo)
+              if (toggle.checked) {
+                // pequeño delay para que el navegador ya tenga listo el elemento
+                setTimeout(() => audio.play().catch(()=>{}), 300);
+              }
+            })();
+          </script>
         {% else %}
           <p style="margin:8px 0 0">Aún no hay audio para este paso.</p>
         {% endif %}
       </div>
 
-      <div class="card" style="margin-top:14px">
-        <strong>Descripción</strong>
-        <p style="white-space:pre-line">{{ step.description }}</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin:12px 0">
+        {% if prev_step %}<a class="btn" href="{% url 'step_viewer' prev_step.pk %}">← Paso anterior</a>{% endif %}
+        {% if next_step %}<a class="btn" href="{% url 'step_viewer' next_step.pk %}">Paso siguiente →</a>{% endif %}
       </div>
+
 
       {% if step.asset and step.asset.static_path %}
         {% with step.asset.static_path|lower as f %}
