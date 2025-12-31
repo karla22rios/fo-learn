@@ -132,7 +132,7 @@
     <!-- CONTENIDO -->
     <section>
       <h1>{{ step.order }}. {{ step.title }}</h1>
-      
+
       {% if step.asset %}
 
         {# ===== A) SI VIENE POR MEDIA (FileField) ===== #}
@@ -375,10 +375,6 @@
         {% endif %}
       </div>
 
-      {# ============================================================
-         THREE.JS SOLO PARA STATIC_PATH cuando NO es PDF
-         (para no cargar scripts cuando el recurso principal es PDF)
-         ============================================================ #}
       {% if step.asset and step.asset.static_path %}
         {% with step.asset.static_path|lower as f %}
           {% if f|slice:"-4:" != ".pdf" %}
