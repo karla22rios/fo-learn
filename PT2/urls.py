@@ -15,7 +15,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("viewer.urls")),
     path("", include(router.urls)),
+    re_path(r"^media/(?P<path>.*)$", serve, {"document_root": settings.MEDIA_ROOT}),
 ]
 
-# 👇 Importante: SIEMPRE servir MEDIA (no sólo en DEBUG)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
