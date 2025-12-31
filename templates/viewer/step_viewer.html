@@ -133,27 +133,171 @@
     <section>
       <h1>{{ step.order }}. {{ step.title }}</h1>
 
-      {% if step.asset and step.asset.static_path %}
-        {% with step.asset.static_path|lower as f %}
-          {% if f|slice:"-4:" == ".pdf" %}
-            <!-- PDF -->
-            <div class="viewer-wrap">
-              <iframe
-                src="{% static step.asset.static_path %}#view=FitH"
-                style="width:100%;height:100%;border:0">
-              </iframe>
-            </div>
-          {% else %}
-            <!-- MODELO 3D -->
-            <div class="viewer-wrap" id="viewerWrap">
-              <div class="viewer-toolbar">
-                <button class="btn" id="btnWire" type="button">Wireframe</button>
-                <button class="btn" id="btnReset" type="button">Reset vista</button>
+      {# ============================================================
+         RECURSO PRINCIPAL:
+         - Prioridad 1: step.asset.file (MEDIA, subido desde admin)
+         - Prioridad 2: step.asset.static_path (STATIC)
+         ============================================================ #}
+
+      {% if step.asset %}
+
+        {# ===== A) SI VIENE POR MEDIA (FileField) ===== #}
+        {% if step.asset.file %}
+          {% with url=step.asset.file.url %}
+            {% with low=url|lower %}
+              {% if low|slice:"-4:" == ".pdf" %}
+                <!-- PDF (MEDIA) -->
+                <div class="viewer-wrap">
+                  <iframe
+                    src="{{ url }}#view=FitH"
+                    style="width:100%;height:100%;border:0">
+                  </iframe>
+                </div>
+                <p style="margin-top:8px">
+                  <a class="btn" href="{{ url }}" target="_blank" rel="noopener">Abrir PDF en otra pestaña</a>
+                </p>
+
+              {% else %}
+                <!-- MODELO 3D (MEDIA) -->
+                <div class="viewer-wrap" id="viewerWrap">
+                  <div class="viewer-toolbar">
+                    <button class="btn" id="btnWire" type="button">Wireframe</button>
+                    <button class="btn" id="btnReset" type="button">Reset vista</button>
+                  </div>
+                  <canvas id="scene" style="width:100%;height:100%"></canvas>
+                </div>
+
+                <!-- THREE.JS para MEDIA -->
+                <script type="module">
+                  import * as THREE from "three";
+                  import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+                  import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+
+                  const wrap = document.getElementById("viewerWrap");
+                  const canvas = document.getElementById("scene");
+                  const renderer = new THREE.WebGLRenderer({ canvas, antialias:true });
+                  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+                  const scene = new THREE.Scene();
+                  scene.background = new THREE.Color(0xffffff);
+
+                  const camera = new THREE.PerspectiveCamera(55, 16/9, 0.01, 1000);
+                  camera.position.set(3,2,3);
+
+                  const controls = new OrbitControls(camera, renderer.domElement);
+                  controls.enableDamping = true;
+
+                  scene.add(new THREE.HemisphereLight(0xffffff, 0x222222, 1));
+                  const dir = new THREE.DirectionalLight(0xffffff, 1);
+                  dir.position.set(3,4,5);
+                  scene.add(dir);
+
+                  function fit(){
+                    const r = wrap.getBoundingClientRect();
+                    renderer.setSize(r.width, r.height, false);
+                    camera.aspect = r.width / r.height;
+                    camera.updateProjectionMatrix();
+                  }
+                  new ResizeObserver(fit).observe(wrap);
+                  fit();
+
+                  const loader = new GLTFLoader();
+                  const clock = new THREE.Clock();
+
+                  let mixer = null;
+                  let root = null;
+                  let cam0 = null, tgt0 = null;
+
+                  loader.load(
+                    "{{ url }}",
+                    (gltf)=>{
+                      root = gltf.scene;
+                      scene.add(root);
+
+                      // Encuadre automático
+                      const box = new THREE.Box3().setFromObject(root);
+                      const s = box.getBoundingSphere(new THREE.Sphere());
+
+                      controls.target.copy(s.center);
+                      camera.position.copy(s.center).add(
+                        new THREE.Vector3(1,1,1).multiplyScalar(s.radius*2)
+                      );
+
+                      camera.near = 0.01;
+                      camera.far = s.radius * 10;
+                      camera.updateProjectionMatrix();
+                      controls.update();
+
+                      cam0 = camera.position.clone();
+                      tgt0 = controls.target.clone();
+
+                      // Animación GLB automática (si existe)
+                      if (gltf.animations && gltf.animations.length) {
+                        mixer = new THREE.AnimationMixer(root);
+                        const action = mixer.clipAction(gltf.animations[0]);
+                        action.reset();
+                        action.play();
+                      }
+                    },
+                    undefined,
+                    (err)=>{ console.error("Error cargando GLB:", err); }
+                  );
+
+                  document.getElementById("btnWire").onclick = ()=>{
+                    if(!root) return;
+                    root.traverse(o=>{
+                      if(o.isMesh && o.material) o.material.wireframe = !o.material.wireframe;
+                    });
+                  };
+
+                  document.getElementById("btnReset").onclick = ()=>{
+                    if(!cam0) return;
+                    camera.position.copy(cam0);
+                    controls.target.copy(tgt0);
+                    controls.update();
+                  };
+
+                  function animate(){
+                    requestAnimationFrame(animate);
+                    const dt = clock.getDelta();
+                    if (mixer) mixer.update(dt);
+                    controls.update();
+                    renderer.render(scene, camera);
+                  }
+                  animate();
+                </script>
+              {% endif %}
+            {% endwith %}
+          {% endwith %}
+
+        {# ===== B) SI VIENE POR STATIC_PATH ===== #}
+        {% elif step.asset.static_path %}
+          {% with step.asset.static_path|lower as f %}
+            {% if f|slice:"-4:" == ".pdf" %}
+              <!-- PDF (STATIC) -->
+              <div class="viewer-wrap">
+                <iframe
+                  src="{% static step.asset.static_path %}#view=FitH"
+                  style="width:100%;height:100%;border:0">
+                </iframe>
               </div>
-              <canvas id="scene" style="width:100%;height:100%"></canvas>
-            </div>
-          {% endif %}
-        {% endwith %}
+
+            {% else %}
+              <!-- MODELO 3D (STATIC) -->
+              <div class="viewer-wrap" id="viewerWrap">
+                <div class="viewer-toolbar">
+                  <button class="btn" id="btnWire" type="button">Wireframe</button>
+                  <button class="btn" id="btnReset" type="button">Reset vista</button>
+                </div>
+                <canvas id="scene" style="width:100%;height:100%"></canvas>
+              </div>
+            {% endif %}
+          {% endwith %}
+
+        {% else %}
+          <p>Este paso no tiene recursos asociados.</p>
+        {% endif %}
+
       {% else %}
         <p>Este paso no tiene recursos asociados.</p>
       {% endif %}
@@ -210,7 +354,7 @@
         {% endif %}
       </div>
 
-      <!-- ✅ NUEVO: navegación inferior como la 2da imagen (izq / der) -->
+      <!-- ✅ navegación inferior -->
       <div class="bottom-nav">
         <div>
           {% if prev_step %}
@@ -224,7 +368,7 @@
         </div>
       </div>
 
-      <!-- ✅ NUEVO: Descripción SIEMPRE visible (aunque esté vacía) -->
+      <!-- ✅ Descripción SIEMPRE visible -->
       <div class="card" style="margin-top:14px">
         <strong>Descripción:</strong>
 
@@ -237,10 +381,13 @@
         {% endif %}
       </div>
 
+      {# ============================================================
+         THREE.JS SOLO PARA STATIC_PATH cuando NO es PDF
+         (para no cargar scripts cuando el recurso principal es PDF)
+         ============================================================ #}
       {% if step.asset and step.asset.static_path %}
         {% with step.asset.static_path|lower as f %}
           {% if f|slice:"-4:" != ".pdf" %}
-          <!-- THREE.JS (con animación GLB automática si existe) -->
           <script type="module">
             import * as THREE from "three";
             import { OrbitControls } from "three/addons/controls/OrbitControls.js";
