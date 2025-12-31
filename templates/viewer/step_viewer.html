@@ -132,13 +132,7 @@
     <!-- CONTENIDO -->
     <section>
       <h1>{{ step.order }}. {{ step.title }}</h1>
-
-      {# ============================================================
-         RECURSO PRINCIPAL:
-         - Prioridad 1: step.asset.file (MEDIA, subido desde admin)
-         - Prioridad 2: step.asset.static_path (STATIC)
-         ============================================================ #}
-
+      
       {% if step.asset %}
 
         {# ===== A) SI VIENE POR MEDIA (FileField) ===== #}
