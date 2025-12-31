@@ -134,48 +134,92 @@
 
       {# ==========================================================
          RECURSO PRINCIPAL (prioridad):
-         1) YOUTUBE en Description (si contiene youtube.com o youtu.be)
+         1) YouTube si la descripción contiene link
          2) step.asset.static_path -> PDF o GLB
-         3) Nada
          ========================================================== #}
 
-      {% if step.description and ("youtube.com" in step.description or "youtu.be" in step.description) %}
-        <!-- VIDEO YOUTUBE (tomado de Description) -->
-        <div class="viewer-wrap">
-          <iframe
-            src="https://www.youtube.com/embed/{{ step.description|cut:'https://www.youtube.com/watch?v='|cut:'https://youtu.be/'|cut:'&t='|cut:'?t='|cut:'&' }}"
-            title="Video del paso"
-            frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowfullscreen
-            style="width:100%;height:100%;border:0">
-          </iframe>
-        </div>
+      {% with step.description|default:""|lower as desc %}
+        {% if step.description and "youtube.com" in desc or step.description and "youtu.be" in desc %}
+          <!-- VIDEO YOUTUBE (link guardado en Description) -->
+          <div class="viewer-wrap">
+            <iframe
+              id="ytFrame"
+              data-youtube-url="{{ step.description|escapejs }}"
+              title="Video del paso"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen
+              style="width:100%;height:100%;border:0">
+            </iframe>
+          </div>
 
-      {% elif step.asset and step.asset.static_path %}
-        {% with step.asset.static_path|lower as f %}
-          {% if f|slice:"-4:" == ".pdf" %}
-            <!-- PDF -->
-            <div class="viewer-wrap">
-              <iframe
-                src="{% static step.asset.static_path %}#view=FitH"
-                style="width:100%;height:100%;border:0">
-              </iframe>
-            </div>
-          {% else %}
-            <!-- MODELO 3D -->
-            <div class="viewer-wrap" id="viewerWrap">
-              <div class="viewer-toolbar">
-                <button class="btn" id="btnWire" type="button">Wireframe</button>
-                <button class="btn" id="btnReset" type="button">Reset vista</button>
+          <script>
+            (function(){
+              const iframe = document.getElementById("ytFrame");
+              if(!iframe) return;
+
+              const raw = iframe.dataset.youtubeUrl || "";
+              function getYouTubeId(url){
+                try{
+                  const u = new URL(url);
+
+                  // youtu.be/<id>
+                  if (u.hostname.includes("youtu.be")){
+                    const id = u.pathname.replace("/", "").trim();
+                    return id || null;
+                  }
+
+                  // youtube.com/watch?v=<id>
+                  const v = u.searchParams.get("v");
+                  if (v) return v;
+
+                  // youtube.com/embed/<id>
+                  if (u.pathname.includes("/embed/")){
+                    const parts = u.pathname.split("/embed/");
+                    return (parts[1] || "").split("/")[0] || null;
+                  }
+
+                  return null;
+                }catch(e){
+                  return null;
+                }
+              }
+
+              const id = getYouTubeId(raw);
+              if(!id){
+                iframe.replaceWith(document.createTextNode("No se pudo leer el link de YouTube. Revisa que sea un link válido (youtube.com o youtu.be)."));
+                return;
+              }
+
+              iframe.src = "https://www.youtube.com/embed/" + id;
+            })();
+          </script>
+
+        {% elif step.asset and step.asset.static_path %}
+          {% with step.asset.static_path|lower as f %}
+            {% if f|slice:"-4:" == ".pdf" %}
+              <!-- PDF -->
+              <div class="viewer-wrap">
+                <iframe
+                  src="{% static step.asset.static_path %}#view=FitH"
+                  style="width:100%;height:100%;border:0">
+                </iframe>
               </div>
-              <canvas id="scene" style="width:100%;height:100%"></canvas>
-            </div>
-          {% endif %}
-        {% endwith %}
-      {% else %}
-        <p>Este paso no tiene recursos asociados.</p>
-      {% endif %}
+            {% else %}
+              <!-- MODELO 3D -->
+              <div class="viewer-wrap" id="viewerWrap">
+                <div class="viewer-toolbar">
+                  <button class="btn" id="btnWire" type="button">Wireframe</button>
+                  <button class="btn" id="btnReset" type="button">Reset vista</button>
+                </div>
+                <canvas id="scene" style="width:100%;height:100%"></canvas>
+              </div>
+            {% endif %}
+          {% endwith %}
+        {% else %}
+          <p>Este paso no tiene recursos asociados.</p>
+        {% endif %}
+      {% endwith %}
 
       <!-- AUDIO (con auto-play + reiniciar) -->
       <div class="card" style="margin-top:12px">
@@ -241,7 +285,7 @@
         </div>
       </div>
 
-      <!-- Descripción SIEMPRE visible (si el step trae YouTube en Description, igual se muestra) -->
+      <!-- Descripción SIEMPRE visible -->
       <div class="card" style="margin-top:14px">
         <strong>Descripción:</strong>
 
@@ -257,7 +301,7 @@
       {% if step.asset and step.asset.static_path %}
         {% with step.asset.static_path|lower as f %}
           {% if f|slice:"-4:" != ".pdf" %}
-          <!-- THREE.JS (solo cuando el recurso NO es PDF; y si hay YouTube arriba, igual no se ejecuta porque no hay viewerWrap) -->
+          <!-- THREE.JS (solo cuando hay canvas) -->
           <script type="module">
             import * as THREE from "three";
             import { OrbitControls } from "three/addons/controls/OrbitControls.js";
@@ -266,9 +310,8 @@
             const wrap = document.getElementById("viewerWrap");
             const canvas = document.getElementById("scene");
 
-            // Si este paso NO es 3D (ej. YouTube), no existe viewerWrap/canvas y salimos.
             if (!wrap || !canvas) {
-              // No hacer nada
+              // No hay 3D en este paso (ej. YouTube)
             } else {
               const renderer = new THREE.WebGLRenderer({ canvas, antialias:true });
               renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -361,10 +404,8 @@
 
               function animate(){
                 requestAnimationFrame(animate);
-
                 const dt = clock.getDelta();
                 if (mixer) mixer.update(dt);
-
                 controls.update();
                 renderer.render(scene, camera);
               }
