@@ -147,7 +147,7 @@ hr.sep{
   gap:12px;
 
   /* AQUÍ se hace “más corto” el botón */
-  width: 265px;          /* <- ajusta si quieres más corto */
+  width: 240px;          /* <- ajusta si quieres más corto */
   max-width: 100%;
   padding:14px 16px;
 
