@@ -99,6 +99,50 @@
     min-width:0;
   }
 }
+
+/* ===== Fix iPhone: evita desbordamiento horizontal en el step ===== */
+.step-viewer-page{
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* En CSS Grid, esto es CLAVE para que no se “empuje” el layout */
+.step-viewer-page .page,
+.step-viewer-page .sidebar,
+.step-viewer-page section,
+.step-viewer-page .card{
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* Asegura que el visor y el canvas nunca excedan el contenedor */
+.step-viewer-page .viewer-wrap{
+  width: 100%;
+  max-width: 100%;
+}
+
+.step-viewer-page .viewer-wrap canvas{
+  display: block;
+  width: 100% !important;
+  max-width: 100% !important;
+  height: 100% !important;
+}
+
+/* Extra: por si algún texto/liga larga rompe el ancho */
+.step-viewer-page a,
+.step-viewer-page p,
+.step-viewer-page li{
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* Refuerzo SOLO móvil */
+@media (max-width:700px){
+  .step-viewer-page .page{ width:100%; max-width:100%; }
+}
+
+
 </style>
 {% endblock %}
 
