@@ -13,20 +13,20 @@
   <header class="app-header">
     <nav class="nav">
       <a href="{% url 'home' %}" class="brand" style="text-decoration:none; display:flex; align-items:center; gap:10px;">
-        <div class="logo" style="width:24px; height:24px; border-radius:8px; background:linear-gradient(135deg, var(--brand), var(--brand-light));"></div>
-        <span style="font-weight:700; color:var(--text);">FO·Learn</span>
+        <div style="width:26px; height:26px; border-radius:8px; background:linear-gradient(135deg, var(--brand), var(--brand-light)); box-shadow: var(--shadow);"></div>
+        <span style="font-weight:700; color:var(--text); font-size:18px;">FO·Learn</span>
       </a>
 
       <div class="nav-menu-container">
         {% for c in categories %}
-          <a class="menu-item-card" href="{% url 'category_detail' c.slug %}">
-            <span>
+          <a class="menu-item-top" href="{% url 'category_detail' c.slug %}">
+            <span class="icon">
               {% if "manual" in c.name|lower %}📘
               {% elif "cierre" in c.name|lower %}🧵
               {% elif "empalme" in c.name|lower %}🧵
               {% else %}⭐{% endif %}
             </span>
-            {{ c.name }}
+            <span>{{ c.name }}</span>
           </a>
         {% endfor %}
       </div>
@@ -39,7 +39,8 @@
   </header>
 
   <main class="container">
-    <div class="main-content-card"> {% block content %}{% endblock %}
+    <div class="main-card">
+      {% block content %}{% endblock %}
     </div>
   </main>
 </body>
