@@ -7,8 +7,11 @@
   --brand: #8B5CF6;
   --brand-light:#A78BFA;
   --line:  #B6A7E9;
-  --radius:12px;
-  --shadow:0 8px 16px rgba(15,23,42,0.25);
+
+  --radius:14px;
+  --shadow:0 10px 24px rgba(15,23,42,0.18);
+  --shadow-soft:0 8px 18px rgba(15,23,42,0.14);
+
   --font: "Inter", system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
 }
 
@@ -26,14 +29,14 @@ body{
 .app-header{
   position:sticky; top:0; z-index:100;
   backdrop-filter:saturate(140%) blur(10px);
-  background: color-mix(in srgb, var(--bg) 90%, transparent);
+  background: color-mix(in srgb, var(--bg) 92%, transparent);
   border-bottom:1px solid var(--line);
 }
 
 .nav{
-  max-width:1200px; margin:0 auto; padding:12px 20px;
+  max-width:1200px; margin:0 auto; padding:10px 16px;
   display:flex; align-items:center; justify-content:space-between;
-  gap:16px;
+  gap:12px;
 }
 
 .brand{
@@ -41,41 +44,118 @@ body{
   text-decoration:none; color:var(--text);
 }
 .brand .logo{
-  width:28px; height:28px; border-radius:8px;
+  width:26px; height:26px; border-radius:8px;
   background:linear-gradient(135deg, var(--brand), var(--brand-light));
-  box-shadow: var(--shadow);
+  box-shadow: var(--shadow-soft);
 }
 .brand span{ font-weight:800; letter-spacing:.2px; }
 
-/* ======= Botones Atrás e Inicio (Navbar) ======= */
-.btn-back,
-.btn-home {
-  background: var(--brand);
-  color: #fff;
-  border: none;
-  border-radius: 10px;
-  padding: 8px 11px;           /* más pequeño */
-  cursor: pointer;
-  font-weight: 700;
-  font-size: 13px;             /* más pequeño */
-  transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
-  box-shadow: 0 4px 10px rgba(15,23,42,0.25);
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
+.nav-actions{ display:flex; gap:10px; align-items:center; }
 
+/* Botones arriba (más pequeños) */
+.btn-back,
+.btn-home{
+  background: var(--brand);
+  color:#fff;
+  border:none;
+  border-radius:10px;
+  padding:8px 10px;        /* más pequeño */
+  cursor:pointer;
+  font-weight:700;
+  font-size:13px;          /* más pequeño */
+  transition: background .2s, transform .1s, box-shadow .2s;
+  box-shadow:0 6px 14px rgba(15,23,42,0.22);
+  text-decoration:none;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+}
 .btn-back:hover,
-.btn-home:hover {
+.btn-home:hover{
   background: var(--brand-light);
   transform: translateY(-1px);
-  box-shadow: 0 6px 14px rgba(15,23,42,0.3);
+  box-shadow:0 8px 18px rgba(15,23,42,0.26);
 }
 
-/* ====== Contenedor principal ====== */
+/* ====== Layout global: sidebar + contenido ====== */
+.app-shell{
+  max-width:1200px;
+  margin:0 auto;
+  padding:16px;
+  display:grid;
+  grid-template-columns: 300px 1fr; /* sidebar + contenido */
+  gap:18px;
+}
+
+.app-sidebar{
+  position:sticky;
+  top:68px;                 /* debajo del header */
+  align-self:start;
+}
+
+.app-content{ min-width: 0; }
+
+/* Contenedor general */
 .container{
-  max-width:1200px; margin:0 auto; padding:18px 20px;
+  padding:0; /* lo controlamos por secciones */
+}
+
+/* ====== Sidebar (recuadros bonitos) ====== */
+.side-brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin:6px 0 14px 0;
+}
+.side-logo{
+  width:30px; height:30px; border-radius:10px;
+  background:linear-gradient(135deg, var(--brand), var(--brand-light));
+  box-shadow: var(--shadow-soft);
+}
+.side-title{
+  font-weight:900;
+  font-size:34px;           /* más pequeño que antes */
+  letter-spacing:.2px;
+  color: color-mix(in srgb, var(--text) 88%, var(--brand));
+}
+
+.side-nav{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+/* Los "botones" del sidebar */
+.side-link{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:16px 18px;
+  background:#fff;
+  border:2px solid color-mix(in srgb, var(--line) 70%, transparent);
+  border-radius:18px;
+  box-shadow: var(--shadow);
+  text-decoration:none;
+  color:var(--text);
+  font-weight:800;
+  font-size:22px;           /* texto más pequeño */
+  transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+}
+.side-link .ico{ font-size:22px; width:28px; display:inline-flex; justify-content:center; }
+.side-link:hover{
+  transform: translateY(-2px);
+  box-shadow:0 14px 30px rgba(15,23,42,0.18);
+  border-color: color-mix(in srgb, var(--brand) 55%, var(--line));
+}
+
+/* ====== Tipografía utilitaria ====== */
+h1,h2,h3{ margin:0 0 10px 0 }
+.muted{ color:var(--muted) }
+.hl{ color:var(--brand) }
+
+hr.sep{
+  border:0; border-top:1px solid var(--line);
+  margin:14px 0;
 }
 
 /* ====== Tarjetas / paneles ====== */
@@ -87,121 +167,52 @@ body{
 }
 .card.pad{ padding:16px; }
 
-/* =========================================================
-   LAYOUT GLOBAL: SIDEBAR IZQUIERDA + CONTENIDO DERECHA
-   ========================================================= */
-.app-shell{
+/* ====== Grid interno de páginas (ej: step_viewer) ====== */
+.page{
   display:grid;
-  grid-template-columns: 300px 1fr;
-  gap:22px;
+  grid-template-columns: 340px 1fr; /* sidebar de pasos + contenido 3D (más grande) */
+  gap:18px;
   align-items:start;
 }
+@media (max-width: 980px){
+  .page{ grid-template-columns: 1fr; }
+}
 
-/* Sidebar */
-.main-sidebar{
+/* ====== Sidebar de pasos (se mantiene como tarjeta) ====== */
+.sidebar{
   position:sticky;
-  top:78px;
+  top:68px;
   align-self:start;
-  padding:14px 10px;
-  border-right:1px solid color-mix(in srgb, var(--line) 70%, transparent);
 }
 
-.side-brand{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  margin:4px 6px 14px;
+.step-list{
+  margin:0; padding:0; list-style:none;
 }
-
-.logo.big{
-  width:38px; height:38px;
-  border-radius:12px;
-}
-
-.side-title{
-  font-weight:900;
-  font-size:28px;     /* más pequeño que tu captura */
-  letter-spacing:.3px;
-  color:color-mix(in srgb, var(--text) 92%, #000);
-}
-
-.side-item{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  padding:14px 16px;   /* más compacto */
-  margin:12px 6px;
-  background:#fff;
-  border:1px solid color-mix(in srgb, var(--line) 75%, transparent);
-  border-radius:18px;
-  text-decoration:none;
-  color:var(--text);
-  font-weight:800;
-  font-size:20px;      /* texto más pequeño */
-  box-shadow:0 8px 18px rgba(15,23,42,.10);
-  transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
-}
-
-.side-item .ico{
-  width:34px;
-  display:inline-flex;
-  justify-content:center;
-  font-size:20px;
-}
-
-.side-item:hover{
-  transform: translateY(-2px);
-  border-color: var(--brand-light);
-  box-shadow:0 12px 24px rgba(15,23,42,.16);
-}
-
-.main-content{
-  min-width:0;
-}
-
-/* ====== Tipografía utilitaria ====== */
-h1,h2,h3{ margin:0 0 10px 0 }
-.muted{ color:var(--muted) }
-.hl{ color:var(--brand) }
-hr.sep{
-  border:0; border-top:1px solid var(--line);
-  margin:14px 0;
-}
-
-/* ====== Grid de categorías (HOME) ====== */
-.category-grid{
-  display:grid; gap:16px;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  margin-top:16px;
-}
-
-.category-card{
+.step-list li{ border-left:4px solid transparent; transition: all .2s ease; }
+.step-list a{
   display:block;
-  background:var(--panel);
-  border:1px solid var(--line);
-  border-radius:var(--radius);
-  padding:16px;
-  text-decoration:none;
+  padding:10px 12px;
   color:var(--text);
-  box-shadow:var(--shadow);
-  transition: transform .15s ease, box-shadow .15s ease;
+  text-decoration:none;
+  border-radius:10px;
 }
-.category-card:hover{
-  transform:translateY(-4px);
-  box-shadow:0 12px 28px rgba(15,23,42,.35);
+.step-list a:hover{
+  background:var(--brand-light);
+  color:#fff;
 }
-.category-card h3{
-  margin:0 0 6px 0; font-size:18px; font-weight:700;
-}
-.category-card p{
-  margin:0; font-size:14px;
+.step-list li.active{ border-left-color: var(--brand); }
+.step-list li.active a{
+  background:var(--brand-light);
+  font-weight:800;
+  color:#fff;
 }
 
-/* ====== Visor 3D / PDF / Video ====== */
+/* ====== Visor 3D (más grande) ====== */
 .viewer-wrap{
   position:relative;
   width:100%;
-  aspect-ratio:16 / 9;
+  min-height: 520px;           /* ayuda a que NO se vea mini */
+  aspect-ratio: 16 / 10;       /* más alto */
   background:#DFD8FD;
   border-radius:var(--radius);
   border:1px solid var(--line);
@@ -221,76 +232,120 @@ hr.sep{
   font:15px var(--font);
 }
 
+/* ====== Botones genéricos bonitos (para wireframe/reset/otros) ====== */
+.btn{
+  appearance:none;
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:8px 12px;
+  background:var(--brand);
+  color:#fff;
+  text-decoration:none;
+  cursor:pointer;
+  transition: all .2s ease;
+  font-weight:800;
+  font-size:13px;
+  box-shadow:0 8px 16px rgba(15,23,42,0.18);
+}
+.btn:hover{
+  background:var(--brand-light);
+  transform: translateY(-1px);
+}
+
 /* ====== Navegación entre pasos ====== */
 .step-nav{
   margin-top:18px;
   display:flex; justify-content:space-between; align-items:center;
+  gap:12px;
 }
-
 .nav-btn{
-  padding:8px 14px;
+  padding:10px 14px;
   background:var(--brand);
   color:#fff;
-  border-radius:10px;
+  border-radius:12px;
   text-decoration:none;
-  font-weight:700;
-  transition: background .2s;
+  font-weight:800;
+  transition: background .2s, transform .1s;
+  box-shadow:0 10px 20px rgba(15,23,42,0.16);
 }
 .nav-btn:hover{
   background:var(--brand-light);
+  transform: translateY(-1px);
 }
 
-/* =========================================================
-   MOBILE: sidebar se vuelve horizontal arriba (bonito)
-   ========================================================= */
-@media (max-width: 900px){
+/* ====== Grid de categorías (HOME) ====== */
+.category-grid{
+  display:grid; gap:16px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  margin-top:16px;
+}
+
+/* Si quieres que también se vean como “recuadros bonitos” */
+.category-card{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  background:#fff;
+  border:2px solid color-mix(in srgb, var(--line) 70%, transparent);
+  border-radius:18px;
+  padding:16px 18px;
+  text-decoration:none;
+  color:var(--text);
+  box-shadow: var(--shadow);
+  transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+}
+.category-card:hover{
+  transform: translateY(-2px);
+  box-shadow:0 14px 30px rgba(15,23,42,0.18);
+  border-color: color-mix(in srgb, var(--brand) 55%, var(--line));
+}
+.category-card h3{
+  margin:0;
+  font-size:18px;
+  font-weight:900;
+}
+.category-card p{ margin:0; font-size:14px; }
+
+/* ====== RESPONSIVE (MOBILE) ====== */
+@media (max-width: 980px){
   .app-shell{
     grid-template-columns: 1fr;
-    gap:14px;
+    padding:12px;
   }
 
-  .main-sidebar{
+  /* Sidebar arriba en mobile (scroll horizontal) */
+  .app-sidebar{
     position:relative;
     top:auto;
-    border-right:none;
-    padding:0;
-    margin:0;
   }
 
   .side-brand{
-    margin:0 0 10px 0;
+    justify-content:center;
+    margin:10px 0 10px 0;
   }
 
-  .side-title{
-    font-size:22px;
-  }
+  .side-title{ font-size:26px; }
 
-  /* en móvil: menú horizontal con scroll */
-  .main-sidebar{
-    display:block;
+  .side-nav{
+    flex-direction:row;
+    overflow:auto;
+    padding-bottom:8px;
   }
-
-  .main-sidebar .side-item{
-    display:inline-flex;
-    white-space:nowrap;
-    margin:8px 10px 8px 0;
+  .side-link{
+    min-width: 220px;
     font-size:16px;
-    padding:10px 12px;
-    border-radius:14px;
+    padding:12px 14px;
+    border-radius:16px;
   }
 
-  .main-sidebar{
-    overflow-x:auto;
-    padding-bottom:6px;
+  /* 3D ocupa mejor el ancho */
+  .viewer-wrap{
+    min-height: 360px;
+    aspect-ratio: 16 / 11;
   }
 
-  /* header botones un poco más compactos */
-  .btn-back, .btn-home{
-    padding:7px 10px;
+  .btn-back,.btn-home{
+    padding:7px 9px;
     font-size:12px;
-  }
-
-  .container{
-    padding:14px 14px;
   }
 }
