@@ -444,3 +444,15 @@ h1,h2,h3{ margin:0 0 10px 0; }
     flex: 0 0 auto;
   }
 }
+
+.nav-actions{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* 👉 Empuja Inicio y Atrás a la derecha */
+.nav-actions .btn-home:nth-child(5),
+.nav-actions .btn-back{
+  margin-left: auto;
+}
