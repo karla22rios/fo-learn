@@ -5,126 +5,13 @@
   <meta charset="utf-8">
   <title>{% block title %}FO·Learn{% endblock %}</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{% static 'css/site.css' %}">
   {% block head %}{% endblock %}
-
-  <!-- Sidebar (sin romper tu CSS actual) -->
-  <style>
-    :root{
-      --sidebar-w: 290px;
-      --sidebar-bg: #F3EEFF;
-      --sidebar-border: rgba(90,45,204,.18);
-      --sidebar-card: #FFFFFF;
-      --sidebar-card-border: rgba(90,45,204,.22);
-      --sidebar-shadow: 0 10px 24px rgba(29, 11, 84, .10);
-      --sidebar-text: #1F2937;
-    }
-
-    /* Layout base: sidebar + contenido */
-    .app-layout{
-      display: flex;
-      min-height: calc(100vh - var(--header-h, 0px));
-      width: 100%;
-    }
-
-    /* Sidebar */
-    .sidebar{
-      width: var(--sidebar-w);
-      background: var(--sidebar-bg);
-      border-right: 1px solid var(--sidebar-border);
-      padding: 18px 16px;
-      position: sticky;
-      top: 0;
-      height: 100vh;
-      overflow: auto;
-    }
-
-    .sidebar .side-brand{
-      display:flex;
-      align-items:center;
-      gap: 10px;
-      margin: 6px 6px 18px;
-      font-weight: 800;
-      color: #5A2DCC;
-      letter-spacing: .2px;
-      font-size: 28px;
-      line-height: 1;
-    }
-    .sidebar .side-brand .dot{
-      width: 18px; height: 18px;
-      border-radius: 6px;
-      background: linear-gradient(135deg, #5A2DCC, #7A55E6);
-      box-shadow: 0 8px 16px rgba(29,11,84,.12);
-    }
-
-    .side-nav{
-      display:flex;
-      flex-direction:column;
-      gap: 14px;
-      padding: 6px;
-    }
-
-    .side-link{
-      display:flex;
-      align-items:center;
-      gap: 12px;
-      text-decoration:none;
-      color: var(--sidebar-text);
-      font-weight: 700;
-      font-size: 20px;
-      background: var(--sidebar-card);
-      border: 2px solid var(--sidebar-card-border);
-      border-radius: 16px;
-      padding: 16px 16px;
-      box-shadow: 0 6px 14px rgba(29,11,84,.06);
-      transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
-    }
-    .side-link:hover{
-      transform: translateY(-1px);
-      border-color: rgba(90,45,204,.35);
-      box-shadow: 0 12px 24px rgba(29,11,84,.10);
-    }
-    .side-link .ico{
-      width: 34px;
-      display:flex;
-      justify-content:center;
-      font-size: 22px;
-    }
-    .side-link.is-active{
-      border-color: rgba(90,45,204,.55);
-      box-shadow: 0 14px 26px rgba(29,11,84,.12);
-      background: linear-gradient(180deg, #FFFFFF 0%, #FBFAFF 100%);
-    }
-
-    /* Contenido a la derecha */
-    .app-content{
-      flex: 1;
-      min-width: 0;
-      padding: 0; /* respetamos tu .container */
-    }
-
-    /* Ajuste: tu .container ahora vive dentro de .app-content */
-    .app-content .container{
-      /* No forzamos ancho/alto; dejamos tu site.css mandar */
-    }
-
-    /* Responsive: sidebar arriba */
-    @media (max-width: 980px){
-      .app-layout{ flex-direction: column; }
-      .sidebar{
-        position: relative;
-        width: 100%;
-        height: auto;
-        border-right: none;
-        border-bottom: 1px solid var(--sidebar-border);
-      }
-      .side-link{ font-size: 18px; padding: 14px; }
-    }
-  </style>
 </head>
 
 <body>
+  <!-- Header -->
   <header class="app-header">
     <nav class="nav">
       <a href="{% url 'home' %}" class="brand">
@@ -139,43 +26,46 @@
     </nav>
   </header>
 
-  <div class="app-shell">
+  <!-- Layout: Sidebar + Contenido -->
+  <main class="container">
+    <div class="app-shell">
+      <!-- Sidebar global (bonita). Por defecto aparece en todas las páginas -->
+      <aside class="main-sidebar">
+        <div class="side-brand">
+          <div class="logo big"></div>
+          <div class="side-title">FO-Learn</div>
+        </div>
 
-    <!-- Sidebar global -->
-    <aside class="app-side">
-      <div class="side-title">
-        <span class="side-dot"></span>
-        <span>FO-Learn</span>
-      </div>
-
-      <nav class="side-nav">
-
-        <!-- Cambia slugs a los tuyos -->
-        <a class="side-link {% if active == 'fibra' %}is-active{% endif %}" href="{% url 'category_detail' slug='fibra-optica' %}">
-          <span class="ico">🧵</span><span>Fibra óptica</span>
+        <!-- IMPORTANTE: aquí NO pongo "Inicio" porque me dijiste que lo quitara -->
+        <!-- Cambia los slugs si los tuyos son distintos -->
+        <a class="side-item" href="{% url 'category_detail' 'fibra-optica' %}">
+          <span class="ico">🧵</span>
+          <span>Fibra óptica</span>
         </a>
 
-        <a class="side-link {% if active == 'cierre' %}is-active{% endif %}" href="{% url 'category_detail' slug='cierre-fo' %}">
-          <span class="ico">📦</span><span>Cierre FO</span>
+        <a class="side-item" href="{% url 'category_detail' 'cierre-fo' %}">
+          <span class="ico">📦</span>
+          <span>Cierre FO</span>
         </a>
 
-        <a class="side-link {% if active == 'empalme' %}is-active{% endif %}" href="{% url 'category_detail' slug='empalme-fo' %}">
-          <span class="ico">🔗</span><span>Empalme FO</span>
+        <a class="side-item" href="{% url 'category_detail' 'empalme-fo' %}">
+          <span class="ico">🔗</span>
+          <span>Empalme FO</span>
         </a>
 
-        <a class="side-link {% if active == 'manual' %}is-active{% endif %}" href="{% url 'category_detail' slug='manual-de-usuario' %}">
-          <span class="ico">📘</span><span>Manual de usuario</span>
+        <a class="side-item" href="{% url 'category_detail' 'manual-de-usuario' %}">
+          <span class="ico">📘</span>
+          <span>Manual de usuario</span>
         </a>
-      </nav>
-    </aside>
 
-    <!-- Contenido -->
-    <div class="app-main">
-      <main class="container">
+        {% block sidebar_extra %}{% endblock %}
+      </aside>
+
+      <!-- Contenido principal -->
+      <section class="main-content">
         {% block content %}{% endblock %}
-      </main>
+      </section>
     </div>
-
-  </div>
+  </main>
 </body>
 </html>
