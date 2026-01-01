@@ -4,35 +4,31 @@
 <head>
   <meta charset="utf-8">
   <title>{% block title %}FO·Learn{% endblock %}</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{% static 'css/site.css' %}">
   {% block head %}{% endblock %}
 </head>
 
 <body>
+  <header class="app-header">
+    <nav class="nav">
+      <a href="{% url 'home' %}" class="brand">
+        <div class="logo"></div>
+        <span>FO·Learn</span>
+      </a>
 
-<header class="app-header">
-  <div class="header-inner">
+      <!-- SIEMPRE arriba en la barra -->
+      <div class="nav-actions">
+        <a href="{% url 'home' %}" class="btn-home">🏠 Inicio</a>
+        <button type="button" class="btn-back" onclick="window.history.back()">← Atrás</button>
+      </div>
+    </nav>
+  </header>
 
-    <!-- LOGO -->
-    <a href="{% url 'home' %}" class="brand">
-      <div class="logo"></div>
-      <span>FO·Learn</span>
-    </a>
-
-    <!-- BOTONES FIJOS -->
-    <div class="header-actions">
-      <a href="{% url 'home' %}" class="btn-primary">🏠 Inicio</a>
-      <button onclick="window.history.back()" class="btn-secondary">← Atrás</button>
-    </div>
-
-  </div>
-</header>
-
-<main class="container">
-  {% block content %}{% endblock %}
-</main>
-
+  <main class="container">
+    {% block content %}{% endblock %}
+  </main>
 </body>
 </html>
+
