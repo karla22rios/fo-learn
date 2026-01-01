@@ -1,362 +1,83 @@
 /* =========================
-   Paleta + Base
+   HOME: Menú ARRIBA (override)
+   Evita que el home use layout de 2 columnas
 ========================= */
-:root{
-  --bg:    #EDE9FE;
-  --panel: #C4B5FD;
-  --text:  #1E1B4B;
-  --muted: #4C1D95;
-  --brand: #8B5CF6;
-  --brand-light:#A78BFA;
-  --line:  #B6A7E9;
-
-  --radius: 14px;
-  --shadow: 0 10px 22px rgba(15,23,42,0.18);
-  --shadow-soft: 0 8px 16px rgba(15,23,42,0.12);
-
-  --font: "Inter", system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
+.home-topbar{
+  margin-bottom: 18px;
 }
 
-*{ box-sizing:border-box; }
-html,body{ height:100%; }
-body{
-  margin:0;
-  background:var(--bg);
-  color:var(--text);
-  font:16px/1.55 var(--font);
-  overflow-x:hidden; /* evita que se “salga del marco” */
-}
-
-img{ max-width:100%; height:auto; display:block; }
-
-/* =========================
-   Header / Navbar
-========================= */
-.app-header{
-  position:sticky;
-  top:0;
-  z-index:100;
-  background: color-mix(in srgb, var(--bg) 90%, white);
-  border-bottom:1px solid var(--line);
-  backdrop-filter:saturate(140%) blur(8px);
-}
-
-.nav{
-  max-width:1200px;
-  margin:0 auto;
-  padding:12px 16px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-}
-
-.brand{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  text-decoration:none;
-  color:var(--text);
-  min-width:0;
-}
-
-.logo{
-  width:30px;
-  height:30px;
-  border-radius:10px;
-  background:linear-gradient(135deg, var(--brand), var(--brand-light));
-  box-shadow: var(--shadow-soft);
-  flex:0 0 auto;
-}
-
-.brand-text{
-  font-weight:800;
-  letter-spacing:.2px;
-  white-space:nowrap;
-}
-
-.nav-actions{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  flex:0 0 auto;
-}
-
-/* Botones superiores */
-.btn-top{
-  background:var(--brand);
-  color:#fff;
-  border:none;
-  border-radius:12px;
-  padding:10px 14px;
-  cursor:pointer;
-  font-weight:700;
-  font-size:14px;
-  line-height:1;
-  transition: transform .12s ease, filter .12s ease, box-shadow .12s ease;
-  box-shadow:0 6px 14px rgba(15,23,42,0.18);
-  text-decoration:none;
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
-  white-space:nowrap;
-}
-.btn-top:hover{ filter:brightness(.95); transform:translateY(-1px); }
-.btn-top:active{ transform:translateY(0); }
-
-/* =========================
-   Contenedor general
-========================= */
-.container{
-  max-width:1200px;
-  margin:0 auto;
-  padding:18px 16px 28px;
-}
-
-/* =========================
-   Cards / Tipografía
-========================= */
-.card{
-  background: color-mix(in srgb, var(--panel) 75%, white);
-  border:1px solid var(--line);
-  border-radius:var(--radius);
-  box-shadow: var(--shadow);
-}
-
-.pad{ padding:18px; }
-
-h1,h2,h3{ margin:0 0 10px 0; }
-.muted{ color:var(--muted); }
-
-/* =========================
-   Layout 2 columnas (PC)
-========================= */
-.page{
-  display:grid;
-  grid-template-columns: 340px 1fr;
-  gap:18px;
-  width:100%;
-  min-width:0;
-}
-
-.home-layout .home-main{ min-width:0; }
-.sidebar{ min-width:0; }
-
-/* Sticky sidebar (solo PC) */
-@media (min-width: 981px){
-  .sidebar{
-    position:sticky;
-    top:78px;
-    align-self:start;
-  }
-}
-
-/* =========================
-   HOME (sidebar menu bonito)
-========================= */
-.home-title{
-  font-size:34px;
-  font-weight:900;
-  letter-spacing:.2px;
-  margin-bottom:6px;
-}
-.home-subtitle{ margin:0 0 12px 0; }
-
-.home-menu{
+.home-topbar-head{
   display:flex;
   flex-direction:column;
-  gap:14px;
-  margin-top:8px;
+  gap:4px;
+  margin-bottom: 12px;
 }
 
-/* Botones del lado izquierdo: más “cortos” en longitud */
-.menu-card{
-  text-decoration:none;
-  color:var(--text);
-  background:#fff;
-  border:2px solid color-mix(in srgb, var(--line) 75%, white);
-  border-radius:22px;
-  padding:16px 18px;
+.home-title{
+  font-size: 32px;
+  font-weight: 900;
+  margin: 0;
+}
+
+.home-subtitle{
+  margin: 0;
+}
+
+/* Barra superior con opciones */
+.home-top-menu{
   display:flex;
+  gap:12px;
+  flex-wrap:wrap;              /* PC: se acomodan */
   align-items:center;
-  gap:14px;
-
-  /* aquí controlas el ancho para que NO sean larguísimos */
-  width:min(320px, 100%);
-  box-shadow: var(--shadow-soft);
-  transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
 }
 
-.menu-card:hover{
-  transform: translateY(-2px);
-  box-shadow: 0 12px 22px rgba(15,23,42,0.16);
-  border-color: color-mix(in srgb, var(--brand) 55%, var(--line));
-}
-
-.menu-emoji{
-  font-size:22px;
-  width:28px;
-  text-align:center;
-}
-
-.menu-text{
-  font-size:30px;
-  font-weight:900;
-  letter-spacing:.1px;
-  line-height:1.05;
-}
-
-/* Imagen home */
-.hero-img{
-  width:100%;
-  max-width:640px;
-  margin:18px auto 8px;
-  border-radius:16px;
-  box-shadow: var(--shadow-soft);
-}
-
-/* Menú de abajo (cards) */
-.category-grid{
-  display:grid;
-  gap:14px;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  margin-top:14px;
-}
-
-.category-card{
-  display:block;
-  background:#fff;
-  border:2px solid color-mix(in srgb, var(--line) 75%, white);
-  border-radius:18px;
-  padding:16px;
-  text-decoration:none;
-  color:var(--text);
-  box-shadow: var(--shadow-soft);
-  transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
-}
-.category-card:hover{
-  transform: translateY(-2px);
-  box-shadow: 0 12px 22px rgba(15,23,42,0.16);
-  border-color: color-mix(in srgb, var(--brand) 55%, var(--line));
-}
-.category-card h3{
-  margin:0;
-  font-size:18px;
-  font-weight:800;
-}
-
-/* =========================
-   Step viewer (tu layout general)
-   (Si tu step_viewer.html usa .page, .sidebar, .viewer-wrap,
-   esto le da el look de recuadros)
-========================= */
-.step-list{ margin:0; padding:0; list-style:none; }
-.step-list li{ margin:0; }
-.step-list a{
-  display:block;
-  padding:10px 12px;
-  border-radius:12px;
-  text-decoration:none;
-  color:var(--text);
-}
-.step-list a:hover{
-  background: color-mix(in srgb, var(--brand-light) 45%, white);
-}
-.step-list li.active a{
-  background: color-mix(in srgb, var(--brand-light) 65%, white);
-  font-weight:800;
-}
-
-/* Visor 3D MÁS GRANDE */
-.viewer-wrap{
-  position:relative;
-  width:100%;
-  border-radius:16px;
-  border:1px solid var(--line);
-  overflow:hidden;
-  background:#fff;
-
-  /* aumenta tamaño del canvas/visor */
-  aspect-ratio: 16 / 9;
-  min-height: 460px; /* más grande en PC */
-}
-
-.viewer-toolbar{
-  display:flex;
+/* Botones tipo “pill” */
+.home-pill{
+  display:inline-flex;
+  align-items:center;
   gap:10px;
-  flex-wrap:wrap;
-  margin:10px 0 0;
+
+  background:#fff;
+  border:2px solid color-mix(in srgb, var(--line) 75%, white);
+  border-radius: 999px;
+
+  padding: 10px 14px;
+  box-shadow: var(--shadow-soft);
+
+  text-decoration:none;
+  color: var(--text);
+  font-weight: 800;
+  white-space: nowrap;
+
+  transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
 }
 
-.overlay{
-  position:absolute;
-  inset:0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:#fff;
-  background:rgba(139,92,246,0.7);
-  font:15px var(--font);
+.home-pill:hover{
+  transform: translateY(-1px);
+  box-shadow: 0 12px 22px rgba(15,23,42,0.14);
+  border-color: color-mix(in srgb, var(--brand) 55%, var(--line));
 }
 
-/* =========================
-   Responsive (Tablet y Mobile)
-========================= */
+.home-pill-emoji{ font-size: 18px; }
+.home-pill-text{ font-size: 14px; }
 
-/* Tablet */
-@media (max-width: 980px){
-  .page{
-    grid-template-columns: 1fr;
-  }
-
-  .sidebar{
-    position:static;
-  }
-
-  .menu-card{
-    width:100%;
-  }
-
-  .menu-text{
-    font-size:26px;
-  }
-
-  .viewer-wrap{
-    min-height:360px;
-    aspect-ratio: 4 / 3;
-  }
+/* Contenido home */
+.home-main{
+  margin-top: 0;
 }
 
-/* Mobile */
+/* Mobile: menú horizontal con scroll (se ve bonito y no se rompe) */
 @media (max-width: 700px){
-  .container{
-    padding:14px 12px 20px;
+  .home-top-menu{
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 6px;
+    -webkit-overflow-scrolling: touch;
   }
-
-  .nav{
-    padding:10px 12px;
+  .home-top-menu::-webkit-scrollbar{
+    height: 6px;
   }
-
-  .brand-text{
-    font-size:16px;
-  }
-
-  .btn-top{
-    padding:9px 10px;
-    font-size:13px;
-    border-radius:12px;
-  }
-
-  .pad{ padding:14px; }
-
-  .home-title{ font-size:28px; }
-  .menu-text{ font-size:22px; }
-
-  .category-grid{
-    grid-template-columns: 1fr; /* 1 columna para que se vea bien */
-  }
-
-  .viewer-wrap{
-    min-height:300px;
+  .home-pill{
+    flex: 0 0 auto;
   }
 }
