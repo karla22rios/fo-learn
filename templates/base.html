@@ -18,7 +18,18 @@
         <span>FO·Learn</span>
       </a>
 
-      <!-- SIEMPRE arriba en la barra -->
+      <div class="nav-menu">
+        {% for c in categories %}
+          <a class="nav-link" href="{% url 'category_detail' c.slug %}">
+            {% if "manual" in c.name|lower %}📘
+            {% elif "cierre" in c.name|lower %}🧵
+            {% elif "empalme" in c.name|lower %}🧵
+            {% else %}⭐{% endif %}
+            {{ c.name }}
+          </a>
+        {% endfor %}
+      </div>
+
       <div class="nav-actions">
         <a href="{% url 'home' %}" class="btn-home">🏠 Inicio</a>
         <button type="button" class="btn-back" onclick="window.history.back()">← Atrás</button>
@@ -31,4 +42,3 @@
   </main>
 </body>
 </html>
-
