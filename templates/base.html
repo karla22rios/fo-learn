@@ -149,9 +149,6 @@
       </div>
 
       <nav class="side-nav">
-        <a class="side-link {% if active == 'home' %}is-active{% endif %}" href="{% url 'home' %}">
-          <span class="ico">⭐</span><span>Inicio</span>
-        </a>
 
         <!-- Cambia slugs a los tuyos -->
         <a class="side-link {% if active == 'fibra' %}is-active{% endif %}" href="{% url 'category_detail' slug='fibra-optica' %}">

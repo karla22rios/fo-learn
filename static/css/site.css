@@ -9,388 +9,264 @@
   --line:  #B6A7E9;
   --radius:12px;
   --shadow:0 8px 16px rgba(15,23,42,0.25);
-  --font: "Inter", system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
+  --font: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial;
 }
 
-/* ====== Reset y base ====== */
+/* ====== Reset ====== */
 *{ box-sizing:border-box }
 html,body{ height:100% }
+
 body{
   margin:0;
   background:var(--bg);
   color:var(--text);
-  font:16px/1.5 var(--font);
+  font:15px/1.55 var(--font);
 }
 
-/* ====== Header / Navbar ====== */
+/* ====== Header ====== */
 .app-header{
-  position:sticky; top:0; z-index:100;
-  backdrop-filter:saturate(140%) blur(10px);
-  background: color-mix(in srgb, var(--bg) 90%, transparent);
+  position:sticky;
+  top:0;
+  z-index:100;
+  background:rgba(237,233,254,.95);
   border-bottom:1px solid var(--line);
+  backdrop-filter: blur(10px);
 }
 
 .nav{
-  max-width:1200px; margin:0 auto; padding:12px 20px;
-  display:flex; align-items:center; justify-content:space-between;
-  gap:16px;
+  max-width:1200px;
+  margin:0 auto;
+  padding:12px 20px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
 }
 
 .brand{
-  display:flex; align-items:center; gap:10px;
-  text-decoration:none; color:var(--text);
-}
-.brand .logo{
-  width:28px; height:28px; border-radius:8px;
-  background:linear-gradient(135deg, var(--brand), var(--brand-light));
-  box-shadow: var(--shadow);
-}
-.brand span{ font-weight:700; letter-spacing:.2px; }
-
-/* ====== Botones genéricos ====== */
-.btn{
-  appearance:none;
-  border:1px solid var(--line);
-  border-radius:10px;
-  padding:7px 12px;
-  background:var(--brand-light);
-  color:#fff;
+  display:flex;
+  align-items:center;
+  gap:10px;
   text-decoration:none;
-  cursor:pointer;
-  transition: all .2s ease;
-  font-weight:500;
-}
-.btn:hover{
-  background:var(--brand);
-  border-color:var(--brand);
+  color:var(--text);
+  font-weight:700;
 }
 
-/* Botón destacado */
-.btn.primary{
+.brand .logo{
+  width:26px;
+  height:26px;
+  border-radius:8px;
+  background:linear-gradient(135deg,var(--brand),var(--brand-light));
+  box-shadow:var(--shadow);
+}
+
+/* ====== Botones navbar ====== */
+.nav-actions{
+  display:flex;
+  gap:10px;
+}
+
+.btn-home,
+.btn-back{
   background:var(--brand);
-  border-color:transparent;
   color:#fff;
+  border:none;
+  border-radius:10px;
+  padding:8px 12px;
   font-weight:600;
-}
-.btn.primary:hover{
-  filter:brightness(.92);
+  cursor:pointer;
+  text-decoration:none;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  transition:.2s;
 }
 
-/* ====== Contenedor principal ====== */
+.btn-home:hover,
+.btn-back:hover{
+  background:var(--brand-light);
+  transform:translateY(-1px);
+}
+
+/* ====== Layout ====== */
 .container{
-  max-width:1200px; margin:0 auto; padding:20px;
+  max-width:1200px;
+  margin:0 auto;
+  padding:20px;
 }
 
-/* ====== Tarjetas / paneles ====== */
-.card{
-  background:var(--panel);
-  border:1px solid var(--line);
-  border-radius:var(--radius);
-  box-shadow: var(--shadow);
-}
-.card.pad{ padding:16px; }
-
-/* ====== Grid: sidebar + contenido ====== */
 .page{
   display:grid;
-  grid-template-columns: 280px 1fr;
+  grid-template-columns:260px 1fr;
   gap:20px;
 }
-@media (max-width: 980px){
-  .page{ grid-template-columns: 1fr; }
+
+@media(max-width:980px){
+  .page{
+    grid-template-columns:1fr;
+  }
 }
 
-/* ====== Sidebar de pasos ====== */
+/* ====== Sidebar ====== */
 .sidebar{
   position:sticky;
-  top:68px;
-  align-self:start;
-}
-.sidebar h3{
-  margin:0 0 10px 0;
-  font-size:18px;
+  top:70px;
 }
 
-.step-list{
-  margin:0; padding:0; list-style:none;
+.sidebar h2,
+.sidebar h3{
+  font-size:20px;
+  margin:0 0 14px;
 }
-.step-list li{
-  border-left:4px solid transparent;
-  transition: all .2s ease;
-}
-.step-list a{
-  display:block;
-  padding:10px 12px;
+
+/* Botones del sidebar */
+.sidebar a{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  background:#fff;
   color:var(--text);
   text-decoration:none;
-  border-radius:8px;
+  padding:10px 14px;
+  border-radius:14px;
+  font-size:15px;
+  font-weight:600;
+  border:1px solid var(--line);
+  box-shadow:0 4px 10px rgba(15,23,42,.15);
+  transition:.2s;
 }
-.step-list a:hover{
+
+.sidebar a + a{
+  margin-top:10px;
+}
+
+.sidebar a:hover{
   background:var(--brand-light);
   color:#fff;
+  transform:translateY(-2px);
 }
+
+/* ====== Cards ====== */
+.card{
+  background:var(--panel);
+  border-radius:var(--radius);
+  border:1px solid var(--line);
+  box-shadow:var(--shadow);
+}
+
+.card.pad{
+  padding:16px;
+}
+
+/* ====== Grid categorías (home) ====== */
+.category-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:16px;
+  margin-top:16px;
+}
+
+.category-card{
+  background:var(--panel);
+  border-radius:var(--radius);
+  border:1px solid var(--line);
+  padding:14px;
+  text-decoration:none;
+  color:var(--text);
+  box-shadow:var(--shadow);
+  transition:.2s;
+}
+
+.category-card h3{
+  font-size:16px;
+  margin:0;
+}
+
+.category-card:hover{
+  transform:translateY(-4px);
+}
+
+/* ====== Sidebar pasos ====== */
+.step-list{
+  list-style:none;
+  margin:0;
+  padding:0;
+}
+
+.step-list li{
+  border-left:4px solid transparent;
+}
+
+.step-list a{
+  display:block;
+  padding:9px 12px;
+  border-radius:8px;
+  font-size:14px;
+}
+
 .step-list li.active{
-  border-left-color: var(--brand);
+  border-left-color:var(--brand);
 }
+
 .step-list li.active a{
   background:var(--brand-light);
-  font-weight:600;
   color:#fff;
+  font-weight:600;
 }
 
 /* ====== Visor 3D ====== */
 .viewer-wrap{
-  position:relative;
   width:100%;
-  aspect-ratio:16 / 9;
+  aspect-ratio:16/9;
   background:#DFD8FD;
   border-radius:var(--radius);
   border:1px solid var(--line);
   overflow:hidden;
 }
 
+/* ====== Toolbar visor ====== */
 .viewer-toolbar{
-  display:flex; gap:10px; flex-wrap:wrap;
   margin-top:10px;
+  display:flex;
+  gap:10px;
 }
 
-.overlay{
-  position:absolute; inset:0;
-  display:flex; align-items:center; justify-content:center;
-  color:#fff;
-  background:rgba(139,92,246,0.7);
-  font:15px var(--font);
-}
-
-/* ====== Tipografía utilitaria ====== */
-h1,h2,h3{ margin:0 0 10px 0 }
-.muted{ color:var(--muted) }
-.hl{ color:var(--brand) }
-hr.sep{
-  border:0; border-top:1px solid var(--line);
-  margin:14px 0;
-}
-
-/* ====== Grid de categorías ====== */
-.category-grid{
-  display:grid; gap:16px;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  margin-top:16px;
-}
-
-.category-card{
-  display:block;
-  background:var(--panel);
-  border:1px solid var(--line);
-  border-radius:var(--radius);
-  padding:16px;
-  text-decoration:none;
-  color:var(--text);
-  box-shadow:var(--shadow);
-  transition: transform .15s ease, box-shadow .15s ease;
-}
-.category-card:hover{
-  transform:translateY(-4px);
-  box-shadow:0 12px 28px rgba(15,23,42,.35);
-}
-.category-card h3{
-  margin:0 0 6px 0; font-size:18px; font-weight:600;
-}
-.category-card p{
-  margin:0; font-size:14px;
-}
-
-/* ====== Navegación entre pasos ====== */
+/* ====== Navegación pasos ====== */
 .step-nav{
+  display:flex;
+  justify-content:space-between;
   margin-top:18px;
-  display:flex; justify-content:space-between; align-items:center;
 }
 
 .nav-btn{
-  padding:8px 14px;
   background:var(--brand);
   color:#fff;
-  border-radius:6px;
+  padding:8px 14px;
+  border-radius:8px;
   text-decoration:none;
-  font-weight:500;
-  transition: background .2s;
+  font-weight:600;
+  transition:.2s;
 }
+
 .nav-btn:hover{
   background:var(--brand-light);
 }
 
-/* ====== Botones "Atrás" e "Inicio" ====== */
-.back-btn-container {
-  margin:10px 0 10px;
-  display:flex;
-  gap:10px;
-  align-items:center;
-}
-
-/* Base compartida para los botones superiores */
-.btn-top {
-  background:var(--brand);
-  color:#fff;
-  border:none;
-  border-radius:10px;
-  padding:10px 13px;
-  cursor:pointer;
-  font-weight:600;
-  font-size:14px;
-  transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
-  box-shadow:0 4px 10px rgba(15,23,42,0.25);
-  text-decoration:none;
-  display:inline-flex;
-  align-items:center;
-  gap:6px;
-}
-
-/* ======= Botones Atrás e Inicio (Navbar) ======= */
-
-.btn-back,
-.btn-home {
-  background: var(--brand);
-  color: #fff;
-  border: none;
-  border-radius: 10px;
-  padding: 10px 13px;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 14px;
-  transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
-  box-shadow: 0 4px 10px rgba(15,23,42,0.25);
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.btn-back:hover,
-.btn-home:hover {
-  background: var(--brand-light);
-  transform: translateY(-1px);
-  box-shadow: 0 6px 14px rgba(15,23,42,0.3);
-}
-
-/* Fallback si tu build no soporta "composes" (puedes dejar sólo esto): */
-/*
-.btn-back,
-.btn-home{
-  background:var(--brand);
-  color:#fff;
-  border:none;
-  border-radius:10px;
-  padding:10px 13px;
-  cursor:pointer;
-  font-weight:600;
-  font-size:14px;
-  transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
-  box-shadow:0 4px 10px rgba(15,23,42,0.25);
-  text-decoration:none;
-  display:inline-flex;
-  align-items:center;
-  gap:6px;
-}
-*/
-
-.btn-back:hover,
-.btn-home:hover{
-  background:var(--brand-light);
-  transform:translateY(-1px);
-  box-shadow:0 6px 14px rgba(15,23,42,0.3);
-}
-
-/* ====== Sidebar GLOBAL (todas las páginas) ====== */
-.app-shell{
-  display:flex;
+/* ====== Audio ====== */
+audio{
   width:100%;
-  min-height: calc(100vh - 60px);
 }
 
-.app-side{
-  width: 300px;
-  background: var(--bg);
-  border-right: 1px solid var(--line);
-  padding: 18px 14px;
-  position: sticky;
-  top: 0;
-  height: calc(100vh - 0px);
-  overflow:auto;
+/* ====== Utilidades ====== */
+h1,h2,h3{
+  margin:0 0 10px;
 }
 
-.app-side .side-title{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  font-weight:800;
-  font-size:26px;
-  color: var(--muted);
-  margin: 6px 8px 16px;
+.muted{
+  color:var(--muted);
 }
 
-.app-side .side-dot{
-  width:18px; height:18px;
-  border-radius:6px;
-  background: linear-gradient(135deg, var(--brand), var(--brand-light));
-  box-shadow: var(--shadow);
-}
-
-.side-nav{
-  display:flex;
-  flex-direction:column;
-  gap:14px;
-  padding: 6px;
-}
-
-.side-link{
-  display:flex;
-  align-items:center;
-  gap: 12px;
-  text-decoration:none;
-  color: var(--text);
-  font-weight:700;
-  font-size:20px;
-  background: #fff;
-  border: 2px solid var(--line);
-  border-radius: 16px;
-  padding: 16px 16px;
-  box-shadow: 0 6px 14px rgba(15,23,42,.10);
-  transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
-}
-
-.side-link:hover{
-  transform: translateY(-1px);
-  background: color-mix(in srgb, var(--bg) 70%, #fff);
-  box-shadow: 0 12px 24px rgba(15,23,42,.15);
-}
-
-.side-link .ico{
-  width: 34px;
-  display:flex;
-  justify-content:center;
-  font-size: 22px;
-}
-
-.side-link.is-active{
-  border-color: var(--brand);
-  background: color-mix(in srgb, var(--panel) 35%, #fff);
-}
-
-/* Contenido */
-.app-main{
-  flex:1;
-  min-width:0;
-}
-
-/* Responsive */
-@media (max-width: 980px){
-  .app-shell{ flex-direction:column; }
-  .app-side{
-    width: 100%;
-    position: relative;
-    height:auto;
-    border-right:none;
-    border-bottom:1px solid var(--line);
-  }
-  .side-link{ font-size:18px; padding:14px; }
+hr.sep{
+  border:none;
+  border-top:1px solid var(--line);
+  margin:14px 0;
 }
