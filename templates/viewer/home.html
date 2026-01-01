@@ -1,32 +1,38 @@
-{% extends "base.html" %} 
+{% extends "base.html" %}
 {% load static %}
-{% block title %}Inicio · FO·Learn{% endblock %} 
-{% block content %} 
+{% block title %}Inicio · FO·Learn{% endblock %}
 
-<h2>Bienvenido · Bienvenida </h2>
+{% block content %}
+{% with active="home" %}
 
-<p class="muted" style="text-align:justify; white-space: pre-line;"> 
-  Este sistema web está diseñado para ser un sistema de aprendizaje sobre el cierre y empalme de fibra óptica, utilizando modelado 3D para ofrecer una experiencia visual. 
+<h2>Bienvenido · Bienvenida</h2>
+
+<p class="muted" style="text-align:justify; white-space: pre-line;">
+  Este sistema web está diseñado para ser un sistema de aprendizaje sobre el cierre y empalme de fibra óptica, utilizando modelado 3D para ofrecer una experiencia visual.
   Su propósito es complementar las unidades de aprendizaje de los estudiantes de Ingeniería en Telemática de la UPIITA.
-  A través de esta herramienta, los usuarios podrán explorar conceptos clave, visualizar procesos de forma dinámica y complementar sus conocimientos en un área fundamental de las telecomunicaciones modernas.</p>
+  A través de esta herramienta, los usuarios podrán explorar conceptos clave, visualizar procesos de forma dinámica y complementar sus conocimientos en un área fundamental de las telecomunicaciones modernas.
+</p>
 
-<img src="{% static 'images/Fibraópticpagina.jpg' %}" 
-     alt="Fibra óptica" 
+<img src="{% static 'images/Fibraópticpagina.jpg' %}"
+     alt="Fibra óptica"
      style="width:100%; max-width:500px; display:block; margin:20px auto; border-radius:12px;">
 
-<h2>Menú</h2> 
+<h2>Menú</h2>
+
 <p class="muted" style="text-align:justify; white-space: pre-line;">
-    Aquí encontrarás el menú, te recomendamos empezar con el Manual de Usuario si es que es la primera vez que ingresas.
-    Elige la opción del menú que desees visualizar.
+  Aquí encontrarás el menú, te recomendamos empezar con el Manual de Usuario si es que es la primera vez que ingresas.
+  Elige la opción del menú que desees visualizar.
+</p>
 
-  </p>
-<div class="category-grid"> 
-  {% for c in categories %} 
-  <a class="category-card" href="{% url 'category_detail' c.slug %}"> 
-    <h3>{{ c.name }}</h3> 
-    <!-- <p class="muted">{{ c.description|default:"Sin descripción" }}</p> -->
-  </a> {% empty %} 
-  <p class="muted">No hay categorías todavía.</p> {% endfor %} 
-</div> 
+<div class="category-grid">
+  {% for c in categories %}
+    <a class="category-card" href="{% url 'category_detail' c.slug %}">
+      <h3>{{ c.name }}</h3>
+    </a>
+  {% empty %}
+    <p class="muted">No hay categorías todavía.</p>
+  {% endfor %}
+</div>
 
+{% endwith %}
 {% endblock %}

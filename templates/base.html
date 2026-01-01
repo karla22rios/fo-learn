@@ -2,83 +2,60 @@
 <!doctype html>
 <html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>{% block title %}FO-Learn{% endblock %}</title>
+  <meta charset="utf-8">
+  <title>{% block title %}FO·Learn{% endblock %}</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/site.css' %}">
+  {% block head %}{% endblock %}
 
-  <!-- Tipografía (opcional) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-
+  <!-- Sidebar (sin romper tu CSS actual) -->
   <style>
     :root{
-      --bg: #EFEAFE;
-      --panel: #F6F2FF;
-      --card: #FFFFFF;
-      --stroke: rgba(84, 52, 201, .18);
-      --stroke-2: rgba(34, 26, 77, .12);
-
-      --brand: #5A2DCC;
-      --brand-2: #7A55E6;
-
-      --text: #1F2937;
-      --muted: rgba(31, 41, 55, .75);
-
-      --shadow: 0 10px 24px rgba(29, 11, 84, .10);
-      --shadow-soft: 0 8px 18px rgba(29, 11, 84, .08);
-
-      --r-xl: 18px;
-      --r-lg: 14px;
-      --r-md: 12px;
-
       --sidebar-w: 290px;
+      --sidebar-bg: #F3EEFF;
+      --sidebar-border: rgba(90,45,204,.18);
+      --sidebar-card: #FFFFFF;
+      --sidebar-card-border: rgba(90,45,204,.22);
+      --sidebar-shadow: 0 10px 24px rgba(29, 11, 84, .10);
+      --sidebar-text: #1F2937;
     }
 
-    *{ box-sizing: border-box; }
-    html, body{ height:100%; }
-    body{
-      margin:0;
-      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-    }
-
-    /* Layout general */
-    .app{
-      display:flex;
-      min-height: 100vh;
+    /* Layout base: sidebar + contenido */
+    .app-layout{
+      display: flex;
+      min-height: calc(100vh - var(--header-h, 0px));
       width: 100%;
     }
 
     /* Sidebar */
     .sidebar{
       width: var(--sidebar-w);
+      background: var(--sidebar-bg);
+      border-right: 1px solid var(--sidebar-border);
       padding: 18px 16px;
-      background: var(--panel);
-      border-right: 1px solid var(--stroke);
       position: sticky;
       top: 0;
       height: 100vh;
       overflow: auto;
     }
 
-    .brand{
+    .sidebar .side-brand{
       display:flex;
       align-items:center;
       gap: 10px;
       margin: 6px 6px 18px;
       font-weight: 800;
-      color: var(--brand);
+      color: #5A2DCC;
       letter-spacing: .2px;
-      font-size: 34px;
+      font-size: 28px;
       line-height: 1;
     }
-    .brand .dot{
-      width: 22px; height: 22px;
-      border-radius: 7px;
-      background: linear-gradient(135deg, var(--brand), var(--brand-2));
-      box-shadow: var(--shadow-soft);
+    .sidebar .side-brand .dot{
+      width: 18px; height: 18px;
+      border-radius: 6px;
+      background: linear-gradient(135deg, #5A2DCC, #7A55E6);
+      box-shadow: 0 8px 16px rgba(29,11,84,.12);
     }
 
     .side-nav{
@@ -93,20 +70,20 @@
       align-items:center;
       gap: 12px;
       text-decoration:none;
-      color: var(--text);
+      color: var(--sidebar-text);
       font-weight: 700;
-      font-size: 22px;
-      background: var(--card);
-      border: 2px solid rgba(90,45,204,.20);
+      font-size: 20px;
+      background: var(--sidebar-card);
+      border: 2px solid var(--sidebar-card-border);
       border-radius: 16px;
-      padding: 18px 18px;
+      padding: 16px 16px;
       box-shadow: 0 6px 14px rgba(29,11,84,.06);
       transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
     }
     .side-link:hover{
       transform: translateY(-1px);
       border-color: rgba(90,45,204,.35);
-      box-shadow: 0 10px 22px rgba(29,11,84,.10);
+      box-shadow: 0 12px 24px rgba(29,11,84,.10);
     }
     .side-link .ico{
       width: 34px;
@@ -114,165 +91,94 @@
       justify-content:center;
       font-size: 22px;
     }
-
-    /* Puedes marcar el activo con una variable opcional:
-       en cada template: {% with active="fibra" %} ... {% endwith %}
-       o pasar active desde tu view.
-    */
     .side-link.is-active{
       border-color: rgba(90,45,204,.55);
       box-shadow: 0 14px 26px rgba(29,11,84,.12);
       background: linear-gradient(180deg, #FFFFFF 0%, #FBFAFF 100%);
     }
 
-    /* Contenido */
-    .content{
+    /* Contenido a la derecha */
+    .app-content{
       flex: 1;
       min-width: 0;
-      padding: 22px 26px;
+      padding: 0; /* respetamos tu .container */
     }
 
-    /* Topbar dentro del contenido */
-    .topbar{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap: 16px;
-      padding: 8px 10px 16px;
-      border-bottom: 1px solid rgba(90,45,204,.14);
-      margin-bottom: 18px;
-    }
-    .topbar-left{
-      display:flex;
-      align-items:center;
-      gap: 10px;
-      font-weight: 800;
-      color: var(--text);
-    }
-    .topbar-left .mini-dot{
-      width: 18px; height: 18px;
-      border-radius: 6px;
-      background: linear-gradient(135deg, var(--brand), var(--brand-2));
-      box-shadow: 0 8px 16px rgba(29,11,84,.12);
+    /* Ajuste: tu .container ahora vive dentro de .app-content */
+    .app-content .container{
+      /* No forzamos ancho/alto; dejamos tu site.css mandar */
     }
 
-    .topbar-actions{
-      display:flex;
-      gap: 10px;
-      align-items:center;
-    }
-
-    /* Botones bonitos (reutilizables) */
-    .btn{
-      display:inline-flex;
-      align-items:center;
-      gap: 8px;
-      font-weight: 800;
-      border-radius: 12px;
-      padding: 10px 14px;
-      border: 1px solid rgba(90,45,204,.28);
-      background: #fff;
-      color: var(--brand);
-      text-decoration:none;
-      box-shadow: 0 8px 18px rgba(29,11,84,.08);
-      transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
-      user-select: none;
-    }
-    .btn:hover{
-      transform: translateY(-1px);
-      box-shadow: 0 12px 24px rgba(29,11,84,.12);
-    }
-    .btn--primary{
-      background: linear-gradient(135deg, var(--brand), var(--brand-2));
-      color: #fff;
-      border-color: transparent;
-    }
-    .btn--primary:hover{
-      background: linear-gradient(135deg, #4E24C1, #6E46E0);
-    }
-
-    /* Área principal del bloque */
-    .page{
-      padding: 0 10px 26px;
-    }
-
-    /* Responsive: sidebar pasa arriba */
+    /* Responsive: sidebar arriba */
     @media (max-width: 980px){
-      .app{ flex-direction: column; }
+      .app-layout{ flex-direction: column; }
       .sidebar{
         position: relative;
         width: 100%;
         height: auto;
         border-right: none;
-        border-bottom: 1px solid var(--stroke);
+        border-bottom: 1px solid var(--sidebar-border);
       }
-      .content{ padding: 16px 14px; }
       .side-link{ font-size: 18px; padding: 14px; }
     }
-
-    {% block extra_css %}{% endblock %}
   </style>
-
-  {% block head %}{% endblock %}
 </head>
 
 <body>
-  <div class="app">
+  <header class="app-header">
+    <nav class="nav">
+      <a href="{% url 'home' %}" class="brand">
+        <div class="logo"></div>
+        <span>FO·Learn</span>
+      </a>
 
-    <!-- SIDEBAR -->
-    <aside class="sidebar">
-      <div class="brand">
-        <span class="dot"></span>
+      <div class="nav-actions">
+        <a href="{% url 'home' %}" class="btn-home">🏠 Inicio</a>
+        <button class="btn-back" onclick="window.history.back()">← Atrás</button>
+      </div>
+    </nav>
+  </header>
+
+  <div class="app-shell">
+
+    <!-- Sidebar global -->
+    <aside class="app-side">
+      <div class="side-title">
+        <span class="side-dot"></span>
         <span>FO-Learn</span>
       </div>
 
       <nav class="side-nav">
-        <!-- Ajusta los slugs si los tuyos son distintos -->
         <a class="side-link {% if active == 'home' %}is-active{% endif %}" href="{% url 'home' %}">
-          <span class="ico">⭐</span> <span>Inicio</span>
+          <span class="ico">⭐</span><span>Inicio</span>
         </a>
 
+        <!-- Cambia slugs a los tuyos -->
         <a class="side-link {% if active == 'fibra' %}is-active{% endif %}" href="{% url 'category_detail' slug='fibra-optica' %}">
-          <span class="ico">🧵</span> <span>Fibra óptica</span>
+          <span class="ico">🧵</span><span>Fibra óptica</span>
         </a>
 
         <a class="side-link {% if active == 'cierre' %}is-active{% endif %}" href="{% url 'category_detail' slug='cierre-fo' %}">
-          <span class="ico">📦</span> <span>Cierre FO</span>
+          <span class="ico">📦</span><span>Cierre FO</span>
         </a>
 
         <a class="side-link {% if active == 'empalme' %}is-active{% endif %}" href="{% url 'category_detail' slug='empalme-fo' %}">
-          <span class="ico">🔗</span> <span>Empalme FO</span>
+          <span class="ico">🔗</span><span>Empalme FO</span>
         </a>
 
         <a class="side-link {% if active == 'manual' %}is-active{% endif %}" href="{% url 'category_detail' slug='manual-de-usuario' %}">
-          <span class="ico">📘</span> <span>Manual de usuario</span>
+          <span class="ico">📘</span><span>Manual de usuario</span>
         </a>
       </nav>
     </aside>
 
-    <!-- CONTENT -->
-    <main class="content">
-
-      <!-- TOPBAR (botones donde estaban: arriba a la derecha) -->
-      <div class="topbar">
-        <div class="topbar-left">
-          <span class="mini-dot"></span>
-          <span>FO-Learn</span>
-        </div>
-
-        <div class="topbar-actions">
-          <a class="btn btn--primary" href="{% url 'home' %}">🏠 Inicio</a>
-          <a class="btn btn--primary" href="javascript:history.back()">← Atrás</a>
-        </div>
-      </div>
-
-      <div class="page">
+    <!-- Contenido -->
+    <div class="app-main">
+      <main class="container">
         {% block content %}{% endblock %}
-      </div>
-    </main>
+      </main>
+    </div>
 
   </div>
-
-  {% block scripts %}{% endblock %}
 </body>
 </html>
