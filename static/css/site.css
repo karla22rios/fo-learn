@@ -270,3 +270,109 @@ hr.sep{
   border-top:1px solid var(--line);
   margin:14px 0;
 }
+
+/* =========================
+   MOBILE (<= 820px)
+   ========================= */
+@media (max-width: 820px){
+
+  /* Menos padding general */
+  .container{
+    padding: 14px;
+  }
+
+  /* Header más compacto */
+  .nav{
+    padding: 10px 14px;
+  }
+
+  .brand span{
+    font-size: 14px;
+  }
+
+  /* Botones del header más chicos */
+  .btn-home,
+  .btn-back{
+    padding: 7px 10px;
+    font-size: 13px;
+    border-radius: 10px;
+  }
+
+  /* Layout: sidebar arriba y contenido abajo */
+  .page{
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  /* Sidebar ya no sticky en mobile (evita bugs de altura) */
+  .sidebar{
+    position: static;
+    top: auto;
+  }
+
+  /* Sidebar en 2 columnas (más compacto) */
+  .sidebar a{
+    padding: 10px 12px;
+    font-size: 14px;
+    border-radius: 14px;
+  }
+
+  /* Opcional: hacer los botones del menú en grid */
+  .sidebar{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  /* Si tu sidebar tiene un título, que ocupe toda la fila */
+  .sidebar h2,
+  .sidebar h3{
+    grid-column: 1 / -1;
+    font-size: 18px;
+    margin-bottom: 6px;
+  }
+
+  /* Visor 3D: más alto en móviles para que se vea bien */
+  .viewer-wrap{
+    aspect-ratio: 4 / 3; /* antes 16/9 */
+  }
+
+  /* Toolbar: que baje a varias líneas */
+  .viewer-toolbar{
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  /* Cards más “apretadas” */
+  .card.pad{
+    padding: 12px;
+  }
+
+  /* Títulos más pequeños */
+  h1{ font-size: 22px; }
+  h2{ font-size: 18px; }
+  h3{ font-size: 16px; }
+}
+
+/* =========================
+   MOBILE pequeño (<= 420px)
+   ========================= */
+@media (max-width: 420px){
+
+  /* Sidebar en 1 columna si la pantalla es muy chica */
+  .sidebar{
+    grid-template-columns: 1fr;
+  }
+
+  /* Botones del header aún más compactos */
+  .btn-home,
+  .btn-back{
+    padding: 6px 9px;
+    font-size: 12px;
+  }
+
+  /* Visor más cuadrado para aprovechar altura */
+  .viewer-wrap{
+    aspect-ratio: 1 / 1;
+  }
+}
