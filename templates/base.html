@@ -18,14 +18,16 @@
         <span>FO·Learn</span>
       </a>
 
-      <div class="nav-menu">
+      <div class="nav-menu-container">
         {% for c in categories %}
-          <a class="nav-link" href="{% url 'category_detail' c.slug %}">
-            {% if "manual" in c.name|lower %}📘
-            {% elif "cierre" in c.name|lower %}🧵
-            {% elif "empalme" in c.name|lower %}🧵
-            {% else %}⭐{% endif %}
-            {{ c.name }}
+          <a class="menu-item-top" href="{% url 'category_detail' c.slug %}">
+            <span class="icon">
+              {% if "manual" in c.name|lower %}📘
+              {% elif "cierre" in c.name|lower %}🧵
+              {% elif "empalme" in c.name|lower %}🧵
+              {% else %}⭐{% endif %}
+            </span>
+            <span class="text-label">{{ c.name }}</span>
           </a>
         {% endfor %}
       </div>

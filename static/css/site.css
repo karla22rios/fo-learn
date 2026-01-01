@@ -1,56 +1,70 @@
-/* Modificación del Nav para permitir el menú central */
+/* Reemplaza o añade estas reglas en tu site.css */
+
 .nav {
-  max-width: 1400px; /* Un poco más ancho para que quepa todo */
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 12px 20px;
+  padding: 15px 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 20px;
+  gap: 15px;
 }
 
-/* Estilo para los links de categorías en la Navbar */
-.nav-menu {
+/* Contenedor para que los recuadros no se amontonen */
+.nav-menu-container {
   display: flex;
-  gap: 10px;
-  flex-grow: 1;
-  justify-content: center;
+  gap: 12px;
+  flex-wrap: nowrap;
+  overflow-x: auto; /* Permite scroll si hay muchas categorías */
+  padding: 5px;
 }
 
-.nav-link {
+/* EL FORMATO DE RECUADRO ORIGINAL */
+.menu-item-top {
+  background: #fff; /* Fondo blanco original */
+  border: 1px solid var(--line);
+  border-radius: 14px; /* Bordes redondeados originales */
+  padding: 8px 14px;
   text-decoration: none;
   color: var(--text);
-  font-weight: 600;
+  box-shadow: var(--shadow); /* Tu sombra original */
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
   font-size: 14px;
-  padding: 8px 12px;
-  border-radius: 8px;
-  transition: background 0.2s;
   white-space: nowrap;
-  background: rgba(255,255,255,0.5);
-  border: 1px solid var(--line);
+  transition: transform .1s ease;
 }
 
-.nav-link:hover {
-  background: var(--brand-light);
-  color: #fff;
+.menu-item-top:hover {
+  transform: translateY(-2px);
+  border-color: var(--brand-light);
 }
 
-/* Ajuste de página para cuando no hay sidebar */
+.menu-item-top .icon {
+  font-size: 18px;
+}
+
+/* Ajuste para el contenido de la página de inicio */
 .page-simple {
-  max-width: 800px;
+  max-width: 900px;
   margin: 0 auto;
-  padding: 20px 0;
+  text-align: center;
 }
 
 .content-center {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+  background: rgba(255,255,255,0.3); /* Un toque sutil de fondo */
+  padding: 30px;
+  border-radius: var(--radius);
 }
 
-/* Responsividad para móviles: ocultar o scrollear el menú si es muy largo */
-@media (max-width: 900px) {
-  .nav-menu {
-    display: none; /* Opcional: puedes ocultarlo en móvil o hacerlo scrollable */
+/* Ocultar etiquetas de texto en pantallas muy pequeñas para mantener recuadros */
+@media (max-width: 1000px) {
+  .menu-item-top .text-label {
+    display: none;
+  }
+  .menu-item-top {
+    padding: 10px;
   }
 }
