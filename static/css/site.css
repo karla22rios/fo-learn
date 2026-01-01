@@ -353,26 +353,3 @@ hr.sep{
   h2{ font-size: 18px; }
   h3{ font-size: 16px; }
 }
-
-/* =========================
-   MOBILE pequeño (<= 420px)
-   ========================= */
-@media (max-width: 420px){
-
-  /* Sidebar en 1 columna si la pantalla es muy chica */
-  .sidebar{
-    grid-template-columns: 1fr;
-  }
-
-  /* Botones del header aún más compactos */
-  .btn-home,
-  .btn-back{
-    padding: 6px 9px;
-    font-size: 12px;
-  }
-
-  /* Visor más cuadrado para aprovechar altura */
-  .viewer-wrap{
-    aspect-ratio: 1 / 1;
-  }
-}
