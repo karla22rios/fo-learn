@@ -8,147 +8,171 @@
 
   <style>
     :root{
-      --purple:#8b5cf6;
-      --purple-soft:#ede9fe;
-      --purple-dark:#6d28d9;
-      --bg:#f5f3ff;
+      --bg:#f2efff;
+      --sidebar:#ede9ff;
       --card:#ffffff;
+      --primary:#6b4eff;
+      --primary-soft:#d7ccff;
+      --text:#1f2937;
+      --radius:18px;
+      --shadow:0 8px 20px rgba(0,0,0,.08);
     }
 
-    *{ box-sizing:border-box }
-
+    *{box-sizing:border-box}
     body{
       margin:0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto;
       background:var(--bg);
-      color:#1f2937;
+      color:var(--text);
     }
 
-    /* ====== LAYOUT GENERAL ====== */
-    .app{
+    /* ===== LAYOUT ===== */
+    .layout{
       display:flex;
       min-height:100vh;
     }
 
-    /* ====== SIDEBAR ====== */
+    /* ===== SIDEBAR ===== */
     .sidebar{
-      width:240px;
-      background:var(--purple-soft);
-      border-right:2px solid #ddd6fe;
-      padding:16px;
+      width:280px;
+      background:var(--sidebar);
+      padding:24px 18px;
       display:flex;
       flex-direction:column;
-      gap:18px;
+      gap:16px;
     }
 
-    .sidebar h2{
-      margin:0;
-      font-size:20px;
-      color:var(--purple-dark);
+    .logo{
+      font-size:26px;
+      font-weight:800;
+      color:var(--primary);
+      margin-bottom:12px;
     }
 
-    .menu{
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-    }
-
-    .menu a{
+    .nav-card{
+      background:var(--card);
+      border-radius:var(--radius);
+      padding:14px 18px;
       display:flex;
       align-items:center;
-      gap:10px;
-      padding:10px 14px;
-      border-radius:12px;
-      text-decoration:none;
-      color:#1f2937;
+      gap:12px;
+      font-size:17px;
       font-weight:600;
-      background:var(--card);
-      border:1px solid #ddd6fe;
+      color:var(--text);
+      text-decoration:none;
+      box-shadow:var(--shadow);
+      transition:.25s;
     }
 
-    .menu a:hover{
-      background:#e9d5ff;
+    .nav-card:hover{
+      transform:translateY(-2px);
+      box-shadow:0 14px 30px rgba(0,0,0,.12);
     }
 
-    /* ====== CONTENIDO ====== */
+    .nav-card span{
+      font-size:20px;
+    }
+
+    /* ===== CONTENT ===== */
     .content{
       flex:1;
+      padding:32px 40px;
+    }
+
+    /* ===== GLOBAL CARDS ===== */
+    .card{
+      background:var(--card);
+      border-radius:var(--radius);
       padding:24px;
+      box-shadow:var(--shadow);
+      margin-bottom:24px;
     }
 
-    /* ====== HEADER SUPERIOR ====== */
-    .topbar{
-      display:flex;
-      justify-content:flex-end;
-      gap:10px;
-      margin-bottom:20px;
+    .card-title{
+      font-size:26px;
+      font-weight:800;
+      margin-bottom:12px;
     }
 
-    .topbar a{
-      padding:8px 14px;
-      border-radius:10px;
-      background:var(--purple);
-      color:#fff;
+    /* ===== MENU CARDS (reemplaza listas/links viejos) ===== */
+    .card-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+      gap:20px;
+      margin-top:20px;
+    }
+
+    .menu-card{
+      background:var(--primary-soft);
+      border-radius:20px;
+      padding:22px;
+      font-size:18px;
+      font-weight:700;
       text-decoration:none;
-      font-weight:600;
+      color:var(--text);
+      box-shadow:var(--shadow);
+      transition:.25s;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
     }
 
-    .topbar a:hover{
-      background:var(--purple-dark);
+    .menu-card:hover{
+      transform:translateY(-3px);
+      background:#cbbcff;
     }
 
-    /* ====== RESPONSIVE ====== */
-    @media (max-width:900px){
-      .app{
-        flex-direction:column;
-      }
+    .menu-card span{
+      font-size:22px;
+    }
 
-      .sidebar{
-        width:100%;
-        flex-direction:row;
-        align-items:center;
-        overflow-x:auto;
-      }
-
-      .menu{
-        flex-direction:row;
-      }
+    /* ===== RESPONSIVE ===== */
+    @media(max-width:900px){
+      .sidebar{display:none}
+      .content{padding:20px}
     }
   </style>
 
-  {% block head %}{% endblock %}
+  {% block extra_css %}{% endblock %}
 </head>
 
 <body>
 
-<div class="app">
+<div class="layout">
 
   <!-- ===== SIDEBAR ===== -->
   <aside class="sidebar">
-    <h2>FO-Learn</h2>
+    <div class="logo">FO-Learn</div>
 
-    <nav class="menu">
-      <a href="{% url 'home' %}">⭐ Inicio</a>
-      <a href="{% url 'category_detail' slug='fibra-optica' %}">🧵 Fibra óptica</a>
-      <a href="{% url 'category_detail' slug='cierre-de-fibra-optica' %}">📦 Cierre FO</a>
-      <a href="{% url 'category_detail' slug='empalme-de-fibra-optica' %}">🔗 Empalme FO</a>
-      <a href="{% url 'lesson_detail' slug='manual-de-usuario' %}">📘 Manual de usuario</a>
-    </nav>
+    <a href="{% url 'home' %}" class="nav-card">
+      <span>⭐</span> Inicio
+    </a>
+
+    <a href="{% url 'category_detail' 'fibra-optica' %}" class="nav-card">
+      <span>🧵</span> Fibra óptica
+    </a>
+
+    <a href="{% url 'category_detail' 'cierre-fo' %}" class="nav-card">
+      <span>📦</span> Cierre FO
+    </a>
+
+    <a href="{% url 'category_detail' 'empalme-fo' %}" class="nav-card">
+      <span>🔗</span> Empalme FO
+    </a>
+
+    <a href="{% url 'category_detail' 'manual-de-usuario' %}" class="nav-card">
+      <span>📘</span> Manual de usuario
+    </a>
   </aside>
 
-  <!-- ===== CONTENIDO ===== -->
+  <!-- ===== CONTENT ===== -->
   <main class="content">
-
-    <div class="topbar">
-      <a href="{% url 'home' %}">🏠 Inicio</a>
-      <a href="javascript:history.back()">← Atrás</a>
-    </div>
-
-    {% block content %}{% endblock %}
-
+    {% block content %}
+    {% endblock %}
   </main>
 
 </div>
 
+{% block extra_js %}{% endblock %}
 </body>
 </html>
