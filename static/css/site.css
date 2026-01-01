@@ -357,3 +357,75 @@ hr.sep{
     align-items:stretch;
   }
 }
+
+/* =========================
+   HEADER FIJO GLOBAL
+   ========================= */
+
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: #f2edff;
+  border-bottom: 1px solid #c9bdf7;
+}
+
+.header-inner {
+  max-width: 1200px;
+  margin: auto;
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  color: #1f1b4d;
+  text-decoration: none;
+}
+
+.logo {
+  width: 34px;
+  height: 34px;
+  background: linear-gradient(135deg, #8b6cff, #b9a6ff);
+  border-radius: 10px;
+}
+
+/* BOTONES */
+.header-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-primary,
+.btn-secondary {
+  padding: 8px 14px;
+  border-radius: 12px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.btn-primary {
+  background: #8b6cff;
+  color: white;
+}
+
+.btn-secondary {
+  background: #a992ff;
+  color: white;
+}
+
+/* MOBILE */
+@media (max-width: 700px) {
+  .header-inner {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
