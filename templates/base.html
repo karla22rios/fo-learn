@@ -11,7 +11,6 @@
 </head>
 
 <body>
-  <!-- Header superior (NO lo quitamos) -->
   <header class="app-header">
     <nav class="nav">
       <a href="{% url 'home' %}" class="brand">
@@ -21,50 +20,13 @@
 
       <div class="nav-actions">
         <a href="{% url 'home' %}" class="btn-home">🏠 Inicio</a>
-        <button class="btn-back" type="button" onclick="window.history.back()">← Atrás</button>
+        <button class="btn-back" onclick="window.history.back()">← Atrás</button>
       </div>
     </nav>
   </header>
 
-  <!-- Layout: Sidebar izquierda + Contenido -->
-  <div class="app-shell">
-    <aside class="app-sidebar">
-      <div class="side-brand">
-        <div class="side-logo"></div>
-        <div class="side-title">FO-Learn</div>
-      </div>
-
-      <!-- Menú fijo (cambia los slug si los tuyos son distintos) -->
-      <nav class="side-nav">
-        <!-- NOTA: aquí NO hay botón "Inicio" (me pediste quitarlo del menú lateral) -->
-        <a class="side-link" href="{% url 'category_detail' 'fibra-optica' %}">
-          <span class="ico">🧵</span><span>Fibra óptica</span>
-        </a>
-
-        <a class="side-link" href="{% url 'category_detail' 'cierre-de-fibra-optica' %}">
-          <span class="ico">📦</span><span>Cierre FO</span>
-        </a>
-
-        <a class="side-link" href="{% url 'category_detail' 'empalme-de-fibra-optica' %}">
-          <span class="ico">🔗</span><span>Empalme FO</span>
-        </a>
-
-        <a class="side-link" href="{% url 'category_detail' 'manual-de-usuario' %}">
-          <span class="ico">📘</span><span>Manual de usuario</span>
-        </a>
-
-        <!-- Si tu “Manual de usuario” NO es categoría sino una página/step,
-             dime y lo apunto a la URL correcta. -->
-      </nav>
-
-      {% block sidebar_extra %}{% endblock %}
-    </aside>
-
-    <main class="app-content">
-      <div class="container">
-        {% block content %}{% endblock %}
-      </div>
-    </main>
-  </div>
+  <main class="container">
+    {% block content %}{% endblock %}
+  </main>
 </body>
 </html>
