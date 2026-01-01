@@ -3,25 +3,24 @@
 {% block title %}Inicio · FO·Learn{% endblock %}
 
 {% block content %}
-<div class="content-welcome">
-  <h2>Bienvenido · Bienvenida</h2>
+<div class="page-simple">
+  <section class="content-center">
+    <h2>Bienvenido · Bienvenida</h2>
 
-  <p class="muted" style="text-align:justify; white-space: pre-line; font-size: 18px;">
-    Este sistema web está diseñado para ser un sistema de aprendizaje sobre el cierre y empalme de fibra óptica, utilizando modelado 3D para ofrecer una experiencia visual.
-    Su propósito es complementar las unidades de aprendizaje de los estudiantes de Ingeniería en Telemática de la UPIITA.
-    A través de esta herramienta, los usuarios podrán explorar conceptos clave, visualizar procesos de forma dinámica y complementar sus conocimientos en un área fundamental de las telecomunicaciones modernas.
-  </p>
+    <p class="muted" style="text-align:justify; white-space: pre-line;">
+      Este sistema web está diseñado para ser un sistema de aprendizaje sobre el cierre y empalme de fibra óptica, utilizando modelado 3D para ofrecer una experiencia visual.
+      Su propósito es complementar las unidades de aprendizaje de los estudiantes de Ingeniería en Telemática de la UPIITA.
+    </p>
 
-  <div style="text-align: center; margin: 40px 0;">
     <img src="{% static 'images/Fibraópticpagina.jpg' %}"
          alt="Fibra óptica"
-         style="width:100%; max-width:600px; border-radius:20px; box-shadow: var(--shadow);">
-  </div>
+         style="width:100%; max-width:520px; margin:20px auto; border-radius:12px; box-shadow: var(--shadow);">
 
-  <h2>Explora el contenido</h2>
-  <p class="muted" style="font-size: 18px;">
-    Utiliza el menú de recuadros en la parte superior para navegar por las lecciones.
-    Te recomendamos empezar con el <strong>Manual de Usuario</strong>.
-  </p>
+    <h2>Explora el contenido</h2>
+    <p class="muted" style="text-align:justify; white-space: pre-line;">
+      Selecciona una de las opciones en la barra superior para comenzar. 
+      Te recomendamos el <strong>Manual de Usuario</strong> si es tu primera vez.
+    </p>
+  </section>
 </div>
 {% endblock %}
