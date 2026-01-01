@@ -15,22 +15,19 @@
 <body>
   <header class="app-header">
     <nav class="nav">
-      <a href="{% url 'home' %}" class="brand" aria-label="Ir a Inicio">
+      <a href="{% url 'home' %}" class="brand" aria-label="Inicio">
         <span class="logo" aria-hidden="true"></span>
         <span class="brand-text">FO·Learn</span>
       </a>
 
       <div class="nav-actions">
-        <!-- Categorías -->
-        <a href="{% url 'category_detail' 'fibra-optica' %}" class="btn-top">🧵 Fibra Óptica</a>
-        <a href="{% url 'category_detail' 'empalme-de-fibra-optica' %}" class="btn-top">🔗 Empalme FO</a>
-        <a href="{% url 'category_detail' 'cierre-de-fibra-optica' %}" class="btn-top">📦 Cierre FO</a>
-        <a href="{% url 'manual-de-usuario' %}" class="btn-top">📘 Manual</a>
 
-        <!-- Acciones -->
-        <a href="{% url 'home' %}" class="btn-top">🏠 Inicio</a>
-        <button class="btn-top" type="button" onclick="window.history.back()">← Atrás</button>
+        <!-- Acciones (siempre visibles) -->
+        <a href="{% url 'cierre-de-fibra-optica' %}" class="btn-top btn-home">Inicio</a>
+        <a href="{% url 'home' %}" class="btn-top btn-home">Inicio</a>
+        <button class="btn-top btn-back" type="button" onclick="window.history.back()">← Atrás</button>
       </div>
+
 
     </nav>
   </header>
