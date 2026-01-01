@@ -4,54 +4,51 @@
 
 {% block content %}
 
-<div class="page with-divider">
+<div class="page">
 
-  <!-- Sidebar -->
+  <!-- MENÚ IZQUIERDO -->
   <aside class="sidebar">
-    <div class="side-title">
-      <span class="dot"></span>
-      <span>FO-Learn</span>
-    </div>
-
-    <nav class="side-menu">
-      <!-- OJO: aquí NO ponemos “Inicio” como pediste -->
+    <div class="home-menu">
       {% for c in categories %}
-        <a class="side-link" href="{% url 'category_detail' c.slug %}">
-          <span class="ico">
-            {% if "Fibra" in c.name %}🧵{% elif "Cierre" in c.name %}📦{% elif "Empalme" in c.name %}🔗{% elif "Manual" in c.name %}📘{% else %}📌{% endif %}
+        <a class="menu-item" href="{% url 'category_detail' c.slug %}">
+          <span class="icon">
+            {% if "manual" in c.name|lower %}📘
+            {% elif "cierre" in c.name|lower %}🧵
+            {% elif "empalme" in c.name|lower %}🧵
+            {% else %}⭐{% endif %}
           </span>
-          <span class="label">{{ c.name }}</span>
+          <span>{{ c.name }}</span>
         </a>
       {% empty %}
-        <a class="side-link" href="#">
-          <span class="ico">📌</span>
-          <span class="label">Sin categorías</span>
-        </a>
+        <div class="card pad">
+          <p class="muted">No hay categorías todavía.</p>
+        </div>
       {% endfor %}
-    </nav>
+    </div>
   </aside>
 
-  <!-- Contenido -->
+  <!-- CONTENIDO DERECHO -->
   <section>
+
     <h2>Bienvenido · Bienvenida</h2>
 
     <p class="muted" style="text-align:justify; white-space: pre-line;">
-Este sistema web está diseñado para ser un sistema de aprendizaje sobre el cierre y empalme de fibra óptica, utilizando modelado 3D para ofrecer una experiencia visual.
-Su propósito es complementar las unidades de aprendizaje de los estudiantes de Ingeniería en Telemática de la UPIITA.
-A través de esta herramienta, los usuarios podrán explorar conceptos clave, visualizar procesos de forma dinámica y complementar sus conocimientos en un área fundamental de las telecomunicaciones modernas.
+      Este sistema web está diseñado para ser un sistema de aprendizaje sobre el cierre y empalme de fibra óptica, utilizando modelado 3D para ofrecer una experiencia visual.
+      Su propósito es complementar las unidades de aprendizaje de los estudiantes de Ingeniería en Telemática de la UPIITA.
+      A través de esta herramienta, los usuarios podrán explorar conceptos clave, visualizar procesos de forma dinámica y complementar sus conocimientos en un área fundamental de las telecomunicaciones modernas.
     </p>
 
     <img src="{% static 'images/Fibraópticpagina.jpg' %}"
          alt="Fibra óptica"
-         style="width:100%; max-width:500px; display:block; margin:20px auto; border-radius:12px;">
+         style="width:100%; max-width:520px; margin:20px auto; border-radius:12px;">
 
     <h2>Menú</h2>
     <p class="muted" style="text-align:justify; white-space: pre-line;">
-Aquí encontrarás el menú, te recomendamos empezar con el Manual de Usuario si es que es la primera vez que ingresas.
-Elige la opción del menú que desees visualizar.
+      Aquí encontrarás el menú, te recomendamos empezar con el Manual de Usuario si es que es la primera vez que ingresas.
+      Elige la opción del menú que desees visualizar.
     </p>
 
-    <!-- Menú abajo (tarjetas) -->
+    <!-- MENÚ ABAJO DEL TEXTO (como pediste) -->
     <div class="category-grid">
       {% for c in categories %}
         <a class="category-card" href="{% url 'category_detail' c.slug %}">
