@@ -1,351 +1,262 @@
-/* ====== Paleta ====== */
+/* =========================
+   PALETA Y VARIABLES
+========================= */
 :root{
-  --bg:    #EDE9FE;
-  --panel: #C4B5FD;
-  --text:  #1E1B4B;
-  --muted: #4C1D95;
-  --brand: #8B5CF6;
+  --bg:#EDE9FE;
+  --panel:#C4B5FD;
+  --text:#1E1B4B;
+  --muted:#4C1D95;
+  --brand:#8B5CF6;
   --brand-light:#A78BFA;
-  --line:  #B6A7E9;
-
+  --line:#B6A7E9;
   --radius:14px;
-  --shadow:0 10px 24px rgba(15,23,42,0.18);
-  --shadow-soft:0 8px 18px rgba(15,23,42,0.14);
-
-  --font: "Inter", system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
+  --shadow:0 8px 18px rgba(15,23,42,.22);
+  --font:"Inter",system-ui,-apple-system,Segoe UI,Roboto,Arial;
 }
 
-/* ====== Reset y base ====== */
+/* =========================
+   RESET GLOBAL
+========================= */
 *{ box-sizing:border-box }
-html,body{ height:100% }
+html,body{ margin:0; padding:0; width:100%; height:100% }
 body{
-  margin:0;
   background:var(--bg);
   color:var(--text);
   font:16px/1.5 var(--font);
+  overflow-x:hidden; /* 🔒 evita desbordes */
 }
 
-/* ====== Header / Navbar ====== */
+/* =========================
+   HEADER / NAVBAR
+========================= */
 .app-header{
-  position:sticky; top:0; z-index:100;
-  backdrop-filter:saturate(140%) blur(10px);
-  background: color-mix(in srgb, var(--bg) 92%, transparent);
+  position:sticky;
+  top:0;
+  z-index:100;
+  background:rgba(237,233,254,.9);
+  backdrop-filter:blur(10px);
   border-bottom:1px solid var(--line);
 }
 
 .nav{
-  max-width:1200px; margin:0 auto; padding:10px 16px;
-  display:flex; align-items:center; justify-content:space-between;
-  gap:12px;
+  max-width:1200px;
+  margin:0 auto;
+  padding:12px 20px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
 }
 
 .brand{
-  display:flex; align-items:center; gap:10px;
-  text-decoration:none; color:var(--text);
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-weight:700;
+  text-decoration:none;
+  color:var(--text);
 }
+
 .brand .logo{
-  width:26px; height:26px; border-radius:8px;
-  background:linear-gradient(135deg, var(--brand), var(--brand-light));
-  box-shadow: var(--shadow-soft);
+  width:28px;
+  height:28px;
+  border-radius:8px;
+  background:linear-gradient(135deg,var(--brand),var(--brand-light));
 }
-.brand span{ font-weight:800; letter-spacing:.2px; }
 
-.nav-actions{ display:flex; gap:10px; align-items:center; }
+.nav-actions{
+  display:flex;
+  gap:10px;
+}
 
-/* Botones arriba (más pequeños) */
-.btn-back,
-.btn-home{
-  background: var(--brand);
+.btn-home,
+.btn-back{
+  background:var(--brand);
   color:#fff;
   border:none;
   border-radius:10px;
-  padding:8px 10px;        /* más pequeño */
+  padding:8px 12px;
+  font-size:14px;
+  font-weight:600;
   cursor:pointer;
-  font-weight:700;
-  font-size:13px;          /* más pequeño */
-  transition: background .2s, transform .1s, box-shadow .2s;
-  box-shadow:0 6px 14px rgba(15,23,42,0.22);
   text-decoration:none;
-  display:inline-flex;
-  align-items:center;
-  gap:6px;
+  box-shadow:var(--shadow);
 }
-.btn-back:hover,
-.btn-home:hover{
-  background: var(--brand-light);
-  transform: translateY(-1px);
-  box-shadow:0 8px 18px rgba(15,23,42,0.26);
+.btn-home:hover,
+.btn-back:hover{
+  background:var(--brand-light);
 }
 
-/* ====== Layout global: sidebar + contenido ====== */
-.app-shell{
+/* =========================
+   CONTENEDOR GENERAL
+========================= */
+.container{
   max-width:1200px;
   margin:0 auto;
-  padding:16px;
-  display:grid;
-  grid-template-columns: 300px 1fr; /* sidebar + contenido */
-  gap:18px;
+  padding:20px;
+  width:100%;
 }
 
-.app-sidebar{
-  position:sticky;
-  top:68px;                 /* debajo del header */
-  align-self:start;
-}
-
-.app-content{ min-width: 0; }
-
-/* Contenedor general */
-.container{
-  padding:0; /* lo controlamos por secciones */
-}
-
-/* ====== Sidebar (recuadros bonitos) ====== */
-.side-brand{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  margin:6px 0 14px 0;
-}
-.side-logo{
-  width:30px; height:30px; border-radius:10px;
-  background:linear-gradient(135deg, var(--brand), var(--brand-light));
-  box-shadow: var(--shadow-soft);
-}
-.side-title{
-  font-weight:900;
-  font-size:34px;           /* más pequeño que antes */
-  letter-spacing:.2px;
-  color: color-mix(in srgb, var(--text) 88%, var(--brand));
-}
-
-.side-nav{
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-}
-
-/* Los "botones" del sidebar */
-.side-link{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  padding:16px 18px;
-  background:#fff;
-  border:2px solid color-mix(in srgb, var(--line) 70%, transparent);
-  border-radius:18px;
-  box-shadow: var(--shadow);
-  text-decoration:none;
-  color:var(--text);
-  font-weight:800;
-  font-size:22px;           /* texto más pequeño */
-  transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
-}
-.side-link .ico{ font-size:22px; width:28px; display:inline-flex; justify-content:center; }
-.side-link:hover{
-  transform: translateY(-2px);
-  box-shadow:0 14px 30px rgba(15,23,42,0.18);
-  border-color: color-mix(in srgb, var(--brand) 55%, var(--line));
-}
-
-/* ====== Tipografía utilitaria ====== */
-h1,h2,h3{ margin:0 0 10px 0 }
-.muted{ color:var(--muted) }
-.hl{ color:var(--brand) }
-
-hr.sep{
-  border:0; border-top:1px solid var(--line);
-  margin:14px 0;
-}
-
-/* ====== Tarjetas / paneles ====== */
-.card{
-  background:var(--panel);
-  border:1px solid var(--line);
-  border-radius:var(--radius);
-  box-shadow: var(--shadow);
-}
-.card.pad{ padding:16px; }
-
-/* ====== Grid interno de páginas (ej: step_viewer) ====== */
+/* =========================
+   LAYOUT PRINCIPAL (PC)
+========================= */
 .page{
   display:grid;
-  grid-template-columns: 340px 1fr; /* sidebar de pasos + contenido 3D (más grande) */
-  gap:18px;
-  align-items:start;
-}
-@media (max-width: 980px){
-  .page{ grid-template-columns: 1fr; }
-}
-
-/* ====== Sidebar de pasos (se mantiene como tarjeta) ====== */
-.sidebar{
-  position:sticky;
-  top:68px;
-  align-self:start;
-}
-
-.step-list{
-  margin:0; padding:0; list-style:none;
-}
-.step-list li{ border-left:4px solid transparent; transition: all .2s ease; }
-.step-list a{
-  display:block;
-  padding:10px 12px;
-  color:var(--text);
-  text-decoration:none;
-  border-radius:10px;
-}
-.step-list a:hover{
-  background:var(--brand-light);
-  color:#fff;
-}
-.step-list li.active{ border-left-color: var(--brand); }
-.step-list li.active a{
-  background:var(--brand-light);
-  font-weight:800;
-  color:#fff;
-}
-
-/* ====== Visor 3D (más grande) ====== */
-.viewer-wrap{
-  position:relative;
+  grid-template-columns: 260px 1fr; /* ⬅️ sidebar + contenido */
+  gap:20px;
   width:100%;
-  min-height: 520px;           /* ayuda a que NO se vea mini */
-  aspect-ratio: 16 / 10;       /* más alto */
-  background:#DFD8FD;
+  max-width:100%;
+}
+
+/* =========================
+   SIDEBAR IZQUIERDO
+========================= */
+.sidebar{
+  width:100%;
+}
+
+.sidebar .card{
+  background:var(--panel);
   border-radius:var(--radius);
-  border:1px solid var(--line);
+  padding:16px;
+  box-shadow:var(--shadow);
+}
+
+.sidebar-title{
+  font-size:18px;
+  font-weight:700;
+  margin-bottom:10px;
+}
+
+.menu-btn{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:10px 14px;
+  margin-bottom:10px;
+  background:#fff;
+  border-radius:14px;
+  text-decoration:none;
+  color:var(--text);
+  font-weight:600;
+  box-shadow:var(--shadow);
+  width:100%;
+  max-width:230px; /* 🔑 NO se sale del marco */
+}
+
+.menu-btn:hover{
+  background:var(--brand-light);
+  color:#fff;
+}
+
+/* =========================
+   VISOR 3D
+========================= */
+.viewer-wrap{
+  width:100%;
+  max-width:100%;
+  aspect-ratio:16/9;
+  background:#fff;
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
   overflow:hidden;
 }
 
 .viewer-toolbar{
-  display:flex; gap:10px; flex-wrap:wrap;
-  margin-top:10px;
+  display:flex;
+  gap:10px;
+  margin-bottom:10px;
 }
 
-.overlay{
-  position:absolute; inset:0;
-  display:flex; align-items:center; justify-content:center;
+.viewer-toolbar button{
+  background:var(--brand);
   color:#fff;
-  background:rgba(139,92,246,0.7);
-  font:15px var(--font);
-}
-
-/* ====== Botones genéricos bonitos (para wireframe/reset/otros) ====== */
-.btn{
-  appearance:none;
-  border:1px solid var(--line);
-  border-radius:12px;
+  border:none;
+  border-radius:10px;
   padding:8px 12px;
-  background:var(--brand);
-  color:#fff;
-  text-decoration:none;
+  font-weight:600;
   cursor:pointer;
-  transition: all .2s ease;
-  font-weight:800;
-  font-size:13px;
-  box-shadow:0 8px 16px rgba(15,23,42,0.18);
-}
-.btn:hover{
-  background:var(--brand-light);
-  transform: translateY(-1px);
 }
 
-/* ====== Navegación entre pasos ====== */
-.step-nav{
-  margin-top:18px;
-  display:flex; justify-content:space-between; align-items:center;
-  gap:12px;
-}
-.nav-btn{
-  padding:10px 14px;
-  background:var(--brand);
-  color:#fff;
-  border-radius:12px;
-  text-decoration:none;
-  font-weight:800;
-  transition: background .2s, transform .1s;
-  box-shadow:0 10px 20px rgba(15,23,42,0.16);
-}
-.nav-btn:hover{
-  background:var(--brand-light);
-  transform: translateY(-1px);
-}
-
-/* ====== Grid de categorías (HOME) ====== */
-.category-grid{
-  display:grid; gap:16px;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+/* =========================
+   TARJETAS / PANEL
+========================= */
+.card{
+  background:var(--panel);
+  border-radius:var(--radius);
+  padding:16px;
+  box-shadow:var(--shadow);
   margin-top:16px;
 }
 
-/* Si quieres que también se vean como “recuadros bonitos” */
-.category-card{
+/* =========================
+   GRID DE CATEGORÍAS
+========================= */
+.category-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:16px;
+  width:100%;
+}
+
+/* =========================
+   BOTONES DE PASO
+========================= */
+.step-nav{
   display:flex;
-  align-items:center;
-  gap:12px;
-  background:#fff;
-  border:2px solid color-mix(in srgb, var(--line) 70%, transparent);
-  border-radius:18px;
-  padding:16px 18px;
+  justify-content:space-between;
+  margin-top:20px;
+}
+
+.step-nav a{
+  background:var(--brand);
+  color:#fff;
+  padding:10px 16px;
+  border-radius:12px;
   text-decoration:none;
-  color:var(--text);
-  box-shadow: var(--shadow);
-  transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+  font-weight:600;
 }
-.category-card:hover{
-  transform: translateY(-2px);
-  box-shadow:0 14px 30px rgba(15,23,42,0.18);
-  border-color: color-mix(in srgb, var(--brand) 55%, var(--line));
-}
-.category-card h3{
-  margin:0;
-  font-size:18px;
-  font-weight:900;
-}
-.category-card p{ margin:0; font-size:14px; }
 
-/* ====== RESPONSIVE (MOBILE) ====== */
-@media (max-width: 980px){
-  .app-shell{
-    grid-template-columns: 1fr;
-    padding:12px;
+/* =====================================================
+   📱 ADAPTACIÓN AUTOMÁTICA TABLET Y SMARTPHONE
+===================================================== */
+@media (max-width:980px){
+
+  .page{
+    grid-template-columns:1fr; /* 🔥 UNA SOLA COLUMNA */
   }
 
-  /* Sidebar arriba en mobile (scroll horizontal) */
-  .app-sidebar{
-    position:relative;
-    top:auto;
+  .sidebar{
+    order:1;
   }
 
-  .side-brand{
-    justify-content:center;
-    margin:10px 0 10px 0;
-  }
-
-  .side-title{ font-size:26px; }
-
-  .side-nav{
-    flex-direction:row;
-    overflow:auto;
-    padding-bottom:8px;
-  }
-  .side-link{
-    min-width: 220px;
-    font-size:16px;
-    padding:12px 14px;
-    border-radius:16px;
-  }
-
-  /* 3D ocupa mejor el ancho */
   .viewer-wrap{
-    min-height: 360px;
-    aspect-ratio: 16 / 11;
+    order:2;
   }
 
-  .btn-back,.btn-home{
-    padding:7px 9px;
-    font-size:12px;
+  .menu-btn{
+    max-width:100%;
   }
+}
+
+/* =====================================================
+   📱 SMARTPHONE (BOTONES EN COLUMNA)
+===================================================== */
+@media (max-width:700px){
+
+  .nav{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:10px;
+  }
+
+  .nav-actions{
+    width:100%;
+    justify-content:flex-start;
+  }
+
+  .viewer-toolbar{
+    flex-direction:column;
+    align-items:flex-start;
+  }
+
 }
