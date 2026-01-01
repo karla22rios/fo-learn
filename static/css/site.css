@@ -78,8 +78,9 @@ img{ max-width:100%; height:auto; display:block; }
 .nav-actions{
   display:flex;
   align-items:center;
-  gap:10px;
-  flex:0 0 auto;
+  gap:12px;
+  flex:1 1 auto;
+  min-width:0;
 }
 
 /* Botones superiores */
@@ -103,6 +104,12 @@ img{ max-width:100%; height:auto; display:block; }
 }
 .btn-top:hover{ filter:brightness(.95); transform:translateY(-1px); }
 .btn-top:active{ transform:translateY(0); }
+
+/* ✅ Espacio entre (4 botones) y (Inicio/Atrás)
+   Empuja el 5to elemento (Inicio) a la derecha */
+.nav-actions > :nth-child(5){
+  margin-left:auto;
+}
 
 /* =========================
    Contenedor general
@@ -247,8 +254,6 @@ h1,h2,h3{ margin:0 0 10px 0; }
 
 /* =========================
    Step viewer (tu layout general)
-   (Si tu step_viewer.html usa .page, .sidebar, .viewer-wrap,
-   esto le da el look de recuadros)
 ========================= */
 .step-list{ margin:0; padding:0; list-style:none; }
 .step-list li{ margin:0; }
@@ -359,11 +364,24 @@ h1,h2,h3{ margin:0 0 10px 0; }
   .viewer-wrap{
     min-height:300px;
   }
+
+  /* ✅ Mobile: barra superior con scroll horizontal bonito */
+  .nav-actions{
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+    padding-bottom:6px;
+  }
+  .nav-actions::-webkit-scrollbar{
+    height:6px;
+  }
+  /* Si hay scroll, evita empujar con auto */
+  .nav-actions > :nth-child(5){
+    margin-left: 0;
+  }
 }
 
 /* =========================
    HOME: Menú ARRIBA (override)
-   Evita que el home use layout de 2 columnas
 ========================= */
 .home-topbar{
   margin-bottom: 18px;
@@ -390,7 +408,7 @@ h1,h2,h3{ margin:0 0 10px 0; }
 .home-top-menu{
   display:flex;
   gap:12px;
-  flex-wrap:wrap;              /* PC: se acomodan */
+  flex-wrap:wrap;
   align-items:center;
 }
 
@@ -429,7 +447,7 @@ h1,h2,h3{ margin:0 0 10px 0; }
   margin-top: 0;
 }
 
-/* Mobile: menú horizontal con scroll (se ve bonito y no se rompe) */
+/* Mobile: menú horizontal con scroll */
 @media (max-width: 700px){
   .home-top-menu{
     flex-wrap: nowrap;
@@ -443,16 +461,4 @@ h1,h2,h3{ margin:0 0 10px 0; }
   .home-pill{
     flex: 0 0 auto;
   }
-}
-
-.nav-actions{
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-/* 👉 Empuja Inicio y Atrás a la derecha */
-.nav-actions .btn-home:nth-child(5),
-.nav-actions .btn-back{
-  margin-left: auto;
 }
