@@ -43,6 +43,14 @@
       Elige la opción del menú que desees visualizar.
     </p>
 
+    <div class="category-grid">
+      {% for c in categories %}
+        <a class="category-card" href="{% url 'category_detail' c.slug %}">
+          <h3>{{ c.name }}</h3>
+        </a>
+      {% endfor %}
+    </div>
+
   </section>
 </div>
 
