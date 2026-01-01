@@ -1,4 +1,4 @@
-/* ====== Paleta Original Restaurada ====== */
+/* ====== Paleta Original ====== */
 :root{
   --bg:    #EDE9FE;
   --panel: #C4B5FD;
@@ -13,17 +13,19 @@
 }
 
 /* ====== Base ====== */
-body {
-  margin: 0;
-  background: var(--bg); /* Fondo lila restaurado */
+*{ box-sizing:border-box; }
+body{
+  margin:0;
+  background: var(--bg);
   color: var(--text);
   font: 16px/1.5 var(--font);
 }
 
-/* ====== Header Ajustado ====== */
+/* ====== Navbar Superior ====== */
 .app-header {
   position: sticky; top: 0; z-index: 100;
-  background: var(--bg); /* Mismo color que el fondo para integrarse */
+  background: rgba(237, 233, 254, 0.9);
+  backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--line);
   padding: 10px 0;
 }
@@ -35,69 +37,72 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 20px;
+  gap: 15px;
 }
 
-/* ====== RECUADROS DEL MENÚ (Formato Original) ====== */
+/* MENU DE RECUADROS (Categorías) */
 .nav-menu-container {
   display: flex;
-  gap: 15px;
+  gap: 12px;
   flex-grow: 1;
   justify-content: center;
 }
 
 .menu-item-card {
-  background: #fff; /* Blanco puro como tus recuadros */
+  background: #fff;
   border: 1px solid var(--line);
-  border-radius: 18px; /* Bordes muy redondeados */
-  padding: 12px 18px;
+  border-radius: 14px;
+  padding: 8px 15px;
   text-decoration: none;
   color: var(--text);
-  box-shadow: var(--shadow); /* Sombra marcada */
+  box-shadow: var(--shadow);
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   font-weight: 700;
-  font-size: 16px;
-  transition: transform 0.2s, box-shadow 0.2s;
+  font-size: 14px;
+  transition: transform 0.2s;
   white-space: nowrap;
 }
 
 .menu-item-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 12px 20px rgba(15,23,42,0.35);
+  transform: translateY(-2px);
+  border-color: var(--brand-light);
 }
 
-.menu-item-card .icon {
-  font-size: 20px;
-}
-
-/* ====== Botones Inicio/Atrás ====== */
-.nav-actions { display: flex; gap: 10px; }
+/* Botones de Acción */
+.nav-actions { display: flex; gap: 8px; }
 .btn-home, .btn-back {
   background: var(--brand);
   color: #fff;
   border: none;
   border-radius: 10px;
-  padding: 10px 15px;
+  padding: 8px 12px;
   text-decoration: none;
   font-weight: 600;
-  box-shadow: var(--shadow);
+  font-size: 14px;
   display: flex;
   align-items: center;
   gap: 5px;
+  box-shadow: var(--shadow);
 }
 
-/* ====== Contenido Principal ====== */
+/* ====== CONTENEDOR UNIVERSAL (Para todas las ventanas) ====== */
 .container {
-  max-width: 1000px;
-  margin: 40px auto;
-  padding: 0 20px;
+  max-width: 1100px;
+  margin: 30px auto;
+  padding: 20px;
 }
 
-.content-welcome {
-  text-align: left;
+/* Esto arregla el formato "feo" de las otras páginas */
+.main-content-card {
+  background: rgba(255, 255, 255, 0.4);
+  padding: 40px;
+  border-radius: 20px;
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
 }
 
-h2 { font-size: 28px; margin-bottom: 20px; }
-.muted { color: var(--muted); line-height: 1.6; }
+h2 { font-size: 28px; color: var(--text); margin-top: 0; }
+.muted { color: var(--muted); }
+img { border-radius: 15px; box-shadow: var(--shadow); }
