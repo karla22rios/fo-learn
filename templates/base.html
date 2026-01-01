@@ -1,178 +1,278 @@
 {% load static %}
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{% block title %}FO-Learn{% endblock %}</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Tipografía (opcional) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 
   <style>
     :root{
-      --bg:#f2efff;
-      --sidebar:#ede9ff;
-      --card:#ffffff;
-      --primary:#6b4eff;
-      --primary-soft:#d7ccff;
-      --text:#1f2937;
-      --radius:18px;
-      --shadow:0 8px 20px rgba(0,0,0,.08);
+      --bg: #EFEAFE;
+      --panel: #F6F2FF;
+      --card: #FFFFFF;
+      --stroke: rgba(84, 52, 201, .18);
+      --stroke-2: rgba(34, 26, 77, .12);
+
+      --brand: #5A2DCC;
+      --brand-2: #7A55E6;
+
+      --text: #1F2937;
+      --muted: rgba(31, 41, 55, .75);
+
+      --shadow: 0 10px 24px rgba(29, 11, 84, .10);
+      --shadow-soft: 0 8px 18px rgba(29, 11, 84, .08);
+
+      --r-xl: 18px;
+      --r-lg: 14px;
+      --r-md: 12px;
+
+      --sidebar-w: 290px;
     }
 
-    *{box-sizing:border-box}
+    *{ box-sizing: border-box; }
+    html, body{ height:100%; }
     body{
       margin:0;
-      font-family:system-ui,-apple-system,Segoe UI,Roboto;
-      background:var(--bg);
-      color:var(--text);
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
     }
 
-    /* ===== LAYOUT ===== */
-    .layout{
+    /* Layout general */
+    .app{
       display:flex;
-      min-height:100vh;
+      min-height: 100vh;
+      width: 100%;
     }
 
-    /* ===== SIDEBAR ===== */
+    /* Sidebar */
     .sidebar{
-      width:280px;
-      background:var(--sidebar);
-      padding:24px 18px;
+      width: var(--sidebar-w);
+      padding: 18px 16px;
+      background: var(--panel);
+      border-right: 1px solid var(--stroke);
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: auto;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      margin: 6px 6px 18px;
+      font-weight: 800;
+      color: var(--brand);
+      letter-spacing: .2px;
+      font-size: 34px;
+      line-height: 1;
+    }
+    .brand .dot{
+      width: 22px; height: 22px;
+      border-radius: 7px;
+      background: linear-gradient(135deg, var(--brand), var(--brand-2));
+      box-shadow: var(--shadow-soft);
+    }
+
+    .side-nav{
       display:flex;
       flex-direction:column;
-      gap:16px;
+      gap: 14px;
+      padding: 6px;
     }
 
-    .logo{
-      font-size:26px;
-      font-weight:800;
-      color:var(--primary);
-      margin-bottom:12px;
-    }
-
-    .nav-card{
-      background:var(--card);
-      border-radius:var(--radius);
-      padding:14px 18px;
+    .side-link{
       display:flex;
       align-items:center;
-      gap:12px;
-      font-size:17px;
-      font-weight:600;
-      color:var(--text);
+      gap: 12px;
       text-decoration:none;
-      box-shadow:var(--shadow);
-      transition:.25s;
+      color: var(--text);
+      font-weight: 700;
+      font-size: 22px;
+      background: var(--card);
+      border: 2px solid rgba(90,45,204,.20);
+      border-radius: 16px;
+      padding: 18px 18px;
+      box-shadow: 0 6px 14px rgba(29,11,84,.06);
+      transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+    }
+    .side-link:hover{
+      transform: translateY(-1px);
+      border-color: rgba(90,45,204,.35);
+      box-shadow: 0 10px 22px rgba(29,11,84,.10);
+    }
+    .side-link .ico{
+      width: 34px;
+      display:flex;
+      justify-content:center;
+      font-size: 22px;
     }
 
-    .nav-card:hover{
-      transform:translateY(-2px);
-      box-shadow:0 14px 30px rgba(0,0,0,.12);
+    /* Puedes marcar el activo con una variable opcional:
+       en cada template: {% with active="fibra" %} ... {% endwith %}
+       o pasar active desde tu view.
+    */
+    .side-link.is-active{
+      border-color: rgba(90,45,204,.55);
+      box-shadow: 0 14px 26px rgba(29,11,84,.12);
+      background: linear-gradient(180deg, #FFFFFF 0%, #FBFAFF 100%);
     }
 
-    .nav-card span{
-      font-size:20px;
-    }
-
-    /* ===== CONTENT ===== */
+    /* Contenido */
     .content{
-      flex:1;
-      padding:32px 40px;
+      flex: 1;
+      min-width: 0;
+      padding: 22px 26px;
     }
 
-    /* ===== GLOBAL CARDS ===== */
-    .card{
-      background:var(--card);
-      border-radius:var(--radius);
-      padding:24px;
-      box-shadow:var(--shadow);
-      margin-bottom:24px;
-    }
-
-    .card-title{
-      font-size:26px;
-      font-weight:800;
-      margin-bottom:12px;
-    }
-
-    /* ===== MENU CARDS (reemplaza listas/links viejos) ===== */
-    .card-grid{
-      display:grid;
-      grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
-      gap:20px;
-      margin-top:20px;
-    }
-
-    .menu-card{
-      background:var(--primary-soft);
-      border-radius:20px;
-      padding:22px;
-      font-size:18px;
-      font-weight:700;
-      text-decoration:none;
-      color:var(--text);
-      box-shadow:var(--shadow);
-      transition:.25s;
+    /* Topbar dentro del contenido */
+    .topbar{
       display:flex;
+      align-items:center;
       justify-content:space-between;
+      gap: 16px;
+      padding: 8px 10px 16px;
+      border-bottom: 1px solid rgba(90,45,204,.14);
+      margin-bottom: 18px;
+    }
+    .topbar-left{
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      font-weight: 800;
+      color: var(--text);
+    }
+    .topbar-left .mini-dot{
+      width: 18px; height: 18px;
+      border-radius: 6px;
+      background: linear-gradient(135deg, var(--brand), var(--brand-2));
+      box-shadow: 0 8px 16px rgba(29,11,84,.12);
+    }
+
+    .topbar-actions{
+      display:flex;
+      gap: 10px;
       align-items:center;
     }
 
-    .menu-card:hover{
-      transform:translateY(-3px);
-      background:#cbbcff;
+    /* Botones bonitos (reutilizables) */
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      gap: 8px;
+      font-weight: 800;
+      border-radius: 12px;
+      padding: 10px 14px;
+      border: 1px solid rgba(90,45,204,.28);
+      background: #fff;
+      color: var(--brand);
+      text-decoration:none;
+      box-shadow: 0 8px 18px rgba(29,11,84,.08);
+      transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
+      user-select: none;
+    }
+    .btn:hover{
+      transform: translateY(-1px);
+      box-shadow: 0 12px 24px rgba(29,11,84,.12);
+    }
+    .btn--primary{
+      background: linear-gradient(135deg, var(--brand), var(--brand-2));
+      color: #fff;
+      border-color: transparent;
+    }
+    .btn--primary:hover{
+      background: linear-gradient(135deg, #4E24C1, #6E46E0);
     }
 
-    .menu-card span{
-      font-size:22px;
+    /* Área principal del bloque */
+    .page{
+      padding: 0 10px 26px;
     }
 
-    /* ===== RESPONSIVE ===== */
-    @media(max-width:900px){
-      .sidebar{display:none}
-      .content{padding:20px}
+    /* Responsive: sidebar pasa arriba */
+    @media (max-width: 980px){
+      .app{ flex-direction: column; }
+      .sidebar{
+        position: relative;
+        width: 100%;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid var(--stroke);
+      }
+      .content{ padding: 16px 14px; }
+      .side-link{ font-size: 18px; padding: 14px; }
     }
+
+    {% block extra_css %}{% endblock %}
   </style>
 
-  {% block extra_css %}{% endblock %}
+  {% block head %}{% endblock %}
 </head>
 
 <body>
+  <div class="app">
 
-<div class="layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="brand">
+        <span class="dot"></span>
+        <span>FO-Learn</span>
+      </div>
 
-  <!-- ===== SIDEBAR ===== -->
-  <aside class="sidebar">
-    <div class="logo">FO-Learn</div>
+      <nav class="side-nav">
+        <!-- Ajusta los slugs si los tuyos son distintos -->
+        <a class="side-link {% if active == 'home' %}is-active{% endif %}" href="{% url 'home' %}">
+          <span class="ico">⭐</span> <span>Inicio</span>
+        </a>
 
-    <a href="{% url 'home' %}" class="nav-card">
-      <span>⭐</span> Inicio
-    </a>
+        <a class="side-link {% if active == 'fibra' %}is-active{% endif %}" href="{% url 'category_detail' slug='fibra-optica' %}">
+          <span class="ico">🧵</span> <span>Fibra óptica</span>
+        </a>
 
-    <a href="{% url 'category_detail' 'fibra-optica' %}" class="nav-card">
-      <span>🧵</span> Fibra óptica
-    </a>
+        <a class="side-link {% if active == 'cierre' %}is-active{% endif %}" href="{% url 'category_detail' slug='cierre-fo' %}">
+          <span class="ico">📦</span> <span>Cierre FO</span>
+        </a>
 
-    <a href="{% url 'category_detail' 'cierre-fo' %}" class="nav-card">
-      <span>📦</span> Cierre FO
-    </a>
+        <a class="side-link {% if active == 'empalme' %}is-active{% endif %}" href="{% url 'category_detail' slug='empalme-fo' %}">
+          <span class="ico">🔗</span> <span>Empalme FO</span>
+        </a>
 
-    <a href="{% url 'category_detail' 'empalme-fo' %}" class="nav-card">
-      <span>🔗</span> Empalme FO
-    </a>
+        <a class="side-link {% if active == 'manual' %}is-active{% endif %}" href="{% url 'category_detail' slug='manual-de-usuario' %}">
+          <span class="ico">📘</span> <span>Manual de usuario</span>
+        </a>
+      </nav>
+    </aside>
 
-    <a href="{% url 'category_detail' 'manual-de-usuario' %}" class="nav-card">
-      <span>📘</span> Manual de usuario
-    </a>
-  </aside>
+    <!-- CONTENT -->
+    <main class="content">
 
-  <!-- ===== CONTENT ===== -->
-  <main class="content">
-    {% block content %}
-    {% endblock %}
-  </main>
+      <!-- TOPBAR (botones donde estaban: arriba a la derecha) -->
+      <div class="topbar">
+        <div class="topbar-left">
+          <span class="mini-dot"></span>
+          <span>FO-Learn</span>
+        </div>
 
-</div>
+        <div class="topbar-actions">
+          <a class="btn btn--primary" href="{% url 'home' %}">🏠 Inicio</a>
+          <a class="btn btn--primary" href="javascript:history.back()">← Atrás</a>
+        </div>
+      </div>
 
-{% block extra_js %}{% endblock %}
+      <div class="page">
+        {% block content %}{% endblock %}
+      </div>
+    </main>
+
+  </div>
+
+  {% block scripts %}{% endblock %}
 </body>
 </html>
