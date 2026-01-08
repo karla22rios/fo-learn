@@ -90,10 +90,13 @@
     const model = gltf.scene;
     scene.add(model);
 
-    // ✅ Centrar modelo (SIN escalar)
-    const box = new THREE.Box3().setFromObject(model);
-    const center = box.getCenter(new THREE.Vector3());
-    model.position.sub(center);
+  // 🔴 Forzar escala visible (CLAVE)
+  model.scale.set(0.05, 0.05, 0.05); // prueba 0.1 o 0.01 si hace falta
+
+  // Centrar modelo
+  const box = new THREE.Box3().setFromObject(model);
+  const center = box.getCenter(new THREE.Vector3());
+  model.position.sub(center);
 
     controls.update();
   });
