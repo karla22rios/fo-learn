@@ -273,18 +273,22 @@ h1,h2,h3{ margin:0 0 10px 0; }
 }
 
 /* Visor 3D MÁS GRANDE */
-.viewer-wrap{
-  position:relative;
-  width:100%;
-  border-radius:16px;
-  border:1px solid var(--line);
-  overflow:hidden;
-  background:#fff;
-
-  /* aumenta tamaño del canvas/visor */
+.viewer-wrap {
+  position: relative;
+  width: 100%;
+  border-radius: 16px;
+  border: 1px solid var(--line);
+  overflow: hidden;
+  background: #fff;
   aspect-ratio: 16 / 9;
-  min-height: 460px; /* más grande en PC */
+  min-height: 70vh;
 }
+
+.viewer-wrap model-viewer {
+  width: 100%;
+  height: 100%;
+}
+
 
 .viewer-toolbar{
   display:flex;
