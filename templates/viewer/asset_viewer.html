@@ -68,18 +68,28 @@
       const root = gltf.scene;
       scene.add(root);
 
-      // Enmarcar el modelo automáticamente
+            // Centrar y NORMALIZAR tamaño del modelo
       const box = new THREE.Box3().setFromObject(root);
-      const size = box.getSize(new THREE.Vector3()).length();
+      const size = box.getSize(new THREE.Vector3());
       const center = box.getCenter(new THREE.Vector3());
-      controls.target.copy(center);
-      controls.update();
 
-      const distance = size * 1.2;
-      camera.position.copy(center).add(new THREE.Vector3(distance, distance, distance));
-      camera.near = size / 100;
-      camera.far = size * 100;
+      // Escala uniforme para que todos tengan tamaño similar
+      const maxAxis = Math.max(size.x, size.y, size.z);
+      const scale = 2 / maxAxis; // ← controla qué tan grande se ve
+      root.scale.setScalar(scale);
+
+      // Recalcular centro tras escalar
+      box.setFromObject(root);
+      box.getCenter(center);
+      root.position.sub(center);
+
+      // Cámara FIJA (clave para consistencia)
+      controls.target.set(0, 0, 0);
+      camera.position.set(3, 2, 4);
+      camera.near = 0.1;
+      camera.far = 100;
       camera.updateProjectionMatrix();
+      controls.update();
     });
 
     // Animación
